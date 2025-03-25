@@ -13,6 +13,7 @@ Game::Game(int width, int height, std::string title)
 	glfwSetTime();
 	Run();
 }
+
 void Game::Run()
 {
 	
