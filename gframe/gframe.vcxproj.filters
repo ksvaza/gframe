@@ -34,10 +34,16 @@
       <Filter>Source Files\engine</Filter>
     </ClCompile>
     <ClCompile Include="gframe.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\engine</Filter>
+    </ClCompile>
+    <ClCompile Include="AssetManager.hpp">
+      <Filter>Header Files\engine</Filter>
     </ClCompile>
     <ClCompile Include="AssetManager.cpp">
       <Filter>Source Files\engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\glad-4.6\src\glad.c">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
