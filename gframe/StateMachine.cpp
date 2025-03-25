@@ -12,6 +12,7 @@ namespace game
 	{
 		_isRemoving = 1;
 	}
+	//survive epic the musical
 	void StateMachine::ProcessStateChanges()
 	{
 		if (_isRemoving && !_states.empty())
