@@ -15,7 +15,7 @@ struct GameData
 	Window window;
 	StateMachine Machine;
 	InputManager inputManager;
-	AssetManager AssetManager;
+	//AssetManager AssetManager;
 	Tools tools;
 };
 
