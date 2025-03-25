@@ -5,22 +5,24 @@
 
 Game::Game(int width, int height, std::string title)
 {
+
+	
 	//_data->window.create(sf::VideoMode(width, height), title, sf::Style::Fullscreen);
 	//_data->window.setMouseCursorVisible(0);
 	//_data->Machine.AddState(StateRef(new StartState(_data)), 0);
+	glfwSetTime();
 	Run();
 }
 void Game::Run()
 {
 	
 	float newTime, frameTime, interpolation;
-	float currentTime;
-	//float currentTime = _clock.getElapsedTime().asSeconds();
+	float currentTime = glfwGetTime();
 	float accumulator = 0.0f;
-	//while (/*_data->window.isOpen()*/)
-	//{
+	while (glfwWindowShouldClose(_data->window.))
+	{
 		_data->Machine.ProcessStateChanges();
-		//newTime = _clock.getElapsedTime().asSeconds();
+		newTime = glfwGetTime();
 		frameTime = newTime - currentTime;
 		if (frameTime > 0.25f)
 		{
@@ -36,5 +38,5 @@ void Game::Run()
 		}
 		interpolation = accumulator / dt;
 		_data->Machine.GetActiveState()->Draw(interpolation);
-	//}
+	}
 }
