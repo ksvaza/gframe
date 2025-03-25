@@ -136,6 +136,7 @@
     <ClCompile Include="AssetManager.cpp" />
     <ClCompile Include="AssetManager.hpp" />
     <ClCompile Include="gframe.cpp" />
+    <ClCompile Include="glad.c" />
     <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="StateMachine.cpp" />
