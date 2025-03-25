@@ -2,7 +2,7 @@
 //
 //namespace game
 //{
-//	void StateMachine::AddState(std::unique_ptr<State> newState, bool isreplacing)
+//	void StateMachine::AddState(StateRef newState, bool isreplacing)
 //	{
 //		_isAdding = 1;
 //		_isreplacing = isreplacing;
