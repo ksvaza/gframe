@@ -30,9 +30,15 @@
     <ClCompile Include="StateMachine.cpp">
       <Filter>Source Files\engine</Filter>
     </ClCompile>
+    <ClCompile Include="InputManager.cpp">
+      <Filter>Source Files\engine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="State.hpp">
+      <Filter>Header Files\engine</Filter>
+    </ClInclude>
+    <ClInclude Include="InputManager.hpp">
       <Filter>Header Files\engine</Filter>
     </ClInclude>
   </ItemGroup>
