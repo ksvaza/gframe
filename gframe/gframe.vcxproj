@@ -133,7 +133,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\..\..\glad-4.6\src\glad.c" />
     <ClCompile Include="AssetManager.cpp" />
     <ClCompile Include="AssetManager.hpp" />
     <ClCompile Include="gframe.cpp" />
@@ -141,10 +140,15 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="StateMachine.cpp" />
     <ClCompile Include="StateMachine.hpp" />
+    <ClCompile Include="Tools.cpp" />
+    <ClCompile Include="Tools.hpp" />
+    <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="gframe.hpp" />
     <ClInclude Include="InputManager.hpp" />
     <ClInclude Include="State.hpp" />
+    <ClInclude Include="Window.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
