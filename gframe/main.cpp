@@ -1,39 +1,25 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include "InputManager.hpp"
+#include "Window.hpp"
 
 int main(void)
 {
-    GLFWwindow* window;
-
-    /* Initialize the library */
-    if (!glfwInit())
-        return -1;
-
-    /* Create a windowed mode window and its OpenGL context */
-    window = glfwCreateWindow(640, 480, "Hello World", NULL, NULL);
-    if (!window)
-    {
-        glfwTerminate();
-        return -1;
-    }
-
-    /* Make the window's context current */
-    glfwMakeContextCurrent(window);
+    Window window;
+	window.Create(800, 600, "Hello World");
 
     /* Loop until the user closes the window */
-    while (!glfwWindowShouldClose(window))
+    while (!glfwWindowShouldClose(window.glWindow))
     {
         /* Render here */
         glClear(GL_COLOR_BUFFER_BIT);
 
         /* Swap front and back buffers */
-        glfwSwapBuffers(window);
+        glfwSwapBuffers(window.glWindow);
 
         /* Poll for and process events */
         glfwPollEvents();
     }
 
-    glfwTerminate();
     return 0;
 }

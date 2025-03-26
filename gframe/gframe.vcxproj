@@ -133,6 +133,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\..\..\..\glad-4.6\src\glad.c" />
     <ClCompile Include="AssetManager.cpp" />
     <ClCompile Include="AssetManager.hpp" />
     <ClCompile Include="gframe.cpp" />

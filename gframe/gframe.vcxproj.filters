@@ -42,6 +42,15 @@
     <ClCompile Include="AssetManager.cpp">
       <Filter>Source Files\engine</Filter>
     </ClCompile>
+    <ClCompile Include="Tools.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Tools.hpp">
+      <Filter>Header Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Window.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="..\..\..\..\..\..\glad-4.6\src\glad.c">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -52,6 +61,12 @@
     </ClInclude>
     <ClInclude Include="InputManager.hpp">
       <Filter>Header Files\engine</Filter>
+    </ClInclude>
+    <ClInclude Include="gframe.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Window.hpp">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
