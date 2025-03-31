@@ -4,6 +4,7 @@
 
 void StartState::Init()
 {
+
 }
 
 void StartState::HandleInput()
@@ -12,6 +13,7 @@ void StartState::HandleInput()
 
 void StartState::Update(float dt)
 {
+	
 }
 
 void StartState::Draw(float dt)

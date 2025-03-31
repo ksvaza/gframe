@@ -2,24 +2,28 @@
 #include <GLFW/glfw3.h>
 #include "InputManager.hpp"
 #include "Window.hpp"
+#include "gframe.hpp"
 
 int main(void)
 {
-    Window window;
-	window.Create(800, 600, "Hello World");
+    Game game(800, 600, "|-_-|");
+    
 
-    /* Loop until the user closes the window */
-    while (!glfwWindowShouldClose(window.glWindow))
-    {
-        /* Render here */
-        glClear(GL_COLOR_BUFFER_BIT);
+ //   Window window;
+	//window.Create(800, 600, "Hello World");
 
-        /* Swap front and back buffers */
-        glfwSwapBuffers(window.glWindow);
+ //   /* Loop until the user closes the window */
+ //   while (!glfwWindowShouldClose(window.glWindow))
+ //   {
+ //       /* Render here */
+ //       glClear(GL_COLOR_BUFFER_BIT);
 
-        /* Poll for and process events */
-        glfwPollEvents();
-    }
+ //       /* Swap front and back buffers */
+ //       glfwSwapBuffers(window.glWindow);
+
+ //       /* Poll for and process events */
+ //       glfwPollEvents();
+ //   }
 
     return 0;
 }

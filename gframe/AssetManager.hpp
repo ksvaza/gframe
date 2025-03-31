@@ -6,6 +6,7 @@
 class AssetManager
 {
 public:
+
 	AssetManager() {};
 	~AssetManager() {};
 	void LoadTexture(std::string name, std::string FileName);
