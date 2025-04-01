@@ -8,26 +8,6 @@ int main(void)
 {
     Gframe game(800, 600, "Hello my goofy ahh comrades!");
     
-    class Changes
-    {
-        int changed;
-        long long isBlack;
-        int c(int blacye)
-        {
-            return blacye;
-        }
-    };
-
-
-   
-    class OtherChanges
-    {
-        void c()
-        {
-            std::cout << "geb";
-        }
-    };
-
  //   Window window;
 	//window.Create(800, 600, "Hello World");
 
