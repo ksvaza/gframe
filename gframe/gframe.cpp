@@ -38,8 +38,6 @@ void Gframe::Run()
 
         dt = frameTime;
 
-       // std::cout << std::to_string(1.0f/frameTime) << '\n';
-
         while (accumulator >= dt)
         {
             _data->Machine.GetActiveState()->HandleInput();
