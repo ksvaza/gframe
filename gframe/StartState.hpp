@@ -4,7 +4,7 @@
 class StartState : public State
 {
 public:
-	StartState(GameDataRef data) : _data(data) {};
+	StartState(GframeDataRef data) : _data(data) {};
 	~StartState() {};
 
 	void Init() override;
@@ -17,5 +17,5 @@ public:
 	void Resume() override;
 
 private:
-	GameDataRef _data;
+	GframeDataRef _data;
 };

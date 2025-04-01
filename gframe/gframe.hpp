@@ -10,7 +10,7 @@
 #include <string>
 
 
-struct GameData
+struct GframeData
 {
 	Window window;
 	StateMachine Machine;
@@ -19,14 +19,14 @@ struct GameData
 	Tools tools;
 };
 
-typedef std::shared_ptr<GameData> GameDataRef;
-class Game
+typedef std::shared_ptr<GframeData> GframeDataRef;
+class Gframe
 {
 public:
-	Game(int width, int height, const char* title);
+	Gframe(int width, int height, const char* title);
 private:
 	const float dt = 1.0f / 60.0f;	
-	GameDataRef _data = std::make_shared<GameData>();
+	GframeDataRef _data = std::make_shared<GframeData>();
 
 	
 

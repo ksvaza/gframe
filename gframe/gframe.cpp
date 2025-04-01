@@ -2,7 +2,7 @@
 #include "StartState.hpp"
 
 
-Game::Game(int width, int height, const char* title)
+Gframe::Gframe(int width, int height, const char* title)
 {
 
 	
@@ -16,7 +16,7 @@ Game::Game(int width, int height, const char* title)
 	Run();
 }
 
-void Game::Run()
+void Gframe::Run()
 {
 	
 	float newTime, frameTime, interpolation;
