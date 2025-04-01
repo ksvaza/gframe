@@ -1,7 +1,7 @@
 #include "gframe.hpp"
 #include "StartState.hpp"
 
-Gframe::Gframe(int width, int height, const char* title)
+Gframe::Gframe(int width, int height, std::string title)
 {
     _data->window.Create(width, height, title);
     _data->Machine.AddState(StateRef(new StartState(_data)), 0);

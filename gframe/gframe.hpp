@@ -23,7 +23,7 @@ typedef std::shared_ptr<GframeData> GframeDataRef;
 class Gframe
 {
 public:
-	Gframe(int width, int height, const char* title);
+	Gframe(int width, int height, std::string title);
 private:
 	const float dt = 1.0f / 60.0f;	
 	GframeDataRef _data = std::make_shared<GframeData>();

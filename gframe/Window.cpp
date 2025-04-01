@@ -1,8 +1,6 @@
 #include "Window.hpp"
-#include <stdio.h>
-#include <stdlib.h>
 
-int Window::Create(int width, int height, const char* title)
+int Window::Create(int width, int height, std::string title)
 {
 	// GLFW initialisation
 	if (!glfwInit())
@@ -17,7 +15,7 @@ int Window::Create(int width, int height, const char* title)
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
 	// Creating the window
-	glWindow = glfwCreateWindow(width, height, title, NULL, NULL);
+	glWindow = glfwCreateWindow(width, height, title.c_str(), NULL, NULL);
 	if (!glWindow)
 	{
 		printf("Failed to create window!\n");
