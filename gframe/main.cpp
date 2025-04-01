@@ -18,6 +18,16 @@ int main(void)
         }
     };
 
+
+   
+    class OtherChanges
+    {
+        void c()
+        {
+            std::cout << "geb";
+        }
+    };
+
  //   Window window;
 	//window.Create(800, 600, "Hello World");
 
