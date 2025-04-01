@@ -7,8 +7,7 @@
 int main(void)
 {
     Gframe game(800, 600, "|-_-|");
-    
-
+   
  //   Window window;
 	//window.Create(800, 600, "Hello World");
 
@@ -25,5 +24,5 @@ int main(void)
  //       glfwPollEvents();
  //   }
 
-    return 0;
+   return 0;
 }
