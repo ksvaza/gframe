@@ -15,7 +15,7 @@ public:
 	int width = 0;
 	int height = 0;
 	float aspect_ratio = 0.0f;
-	std::string title = NULL;
+	std::string title;
 
 	int Create(int width, int height, std::string title);
 private:

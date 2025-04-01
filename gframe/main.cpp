@@ -6,7 +6,7 @@
 
 int main(void)
 {
-    Gframe game(800, 600, "Hello my goofy ahh niggers!");
+    Gframe game(800, 600, "Hello my goofy ahh comrades!");
     
 
  //   Window window;
