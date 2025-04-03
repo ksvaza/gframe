@@ -145,6 +145,7 @@
     <ClCompile Include="StateMachine.hpp" />
     <ClCompile Include="Tools.cpp" />
     <ClCompile Include="Tools.hpp" />
+    <ClCompile Include="transform.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -153,6 +154,7 @@
     <ClInclude Include="mesh.hpp" />
     <ClInclude Include="StartState.hpp" />
     <ClInclude Include="State.hpp" />
+    <ClInclude Include="transform.hpp" />
     <ClInclude Include="Window.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

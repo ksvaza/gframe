@@ -1,4 +1,7 @@
 ﻿#pragma once
+#include <stdio.h>
+#include <stdlib.h>
+#include <iostream>
 #include "transform.hpp"
 #include <glm/glm.hpp>
 #include <string>
@@ -26,26 +29,28 @@ struct TextureRef
 class Mesh
 {
 public:
-	Vertex* vertices;
+	Vertex* vertices = NULL;
 	int vertexCount = 0;
 
-	Face* faces;
+	Face* faces = NULL;
 	int faceCount = 0;
 
-	TextureRef* texureReferences;
-	int textureRefCount;
+	TextureRef* textureReferences = NULL;
+	int textureRefCount = 0;
 
 	Transform transform;
-	glm::vec4 colour;
-
-	static Mesh Empty();
+	glm::vec4 colour = glm::vec4(1.0);
 
 	void Create(int vertexCount, int faceCount);
 	void Delete();
 
-	void Print();
 	std::string sPrint();
+	void Print();
 
-	bool Equals(Mesh* mesh);
+	bool Equals(Mesh& mesh);
 	bool IsEmpty();
+
+	Mesh();
+	~Mesh() {}
 };
+std::ostream& operator<<(std::ostream& os, const Mesh& mesh);
