@@ -161,10 +161,6 @@
     <ClInclude Include="transform.hpp" />
     <ClInclude Include="Window.hpp" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="..\x64\Debug\ref\shaders\fragment.glsl" />
-    <None Include="..\x64\Debug\ref\shaders\vertex.glsl" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
