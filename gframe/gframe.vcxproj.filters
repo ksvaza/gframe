@@ -105,12 +105,4 @@
       <Filter>Header Files\engine\rendering</Filter>
     </ClInclude>
   </ItemGroup>
-  <ItemGroup>
-    <None Include="..\x64\Debug\ref\shaders\fragment.glsl">
-      <Filter>Resource Files</Filter>
-    </None>
-    <None Include="..\x64\Debug\ref\shaders\vertex.glsl">
-      <Filter>Resource Files</Filter>
-    </None>
-  </ItemGroup>
 </Project>
