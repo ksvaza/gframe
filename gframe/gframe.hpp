@@ -4,6 +4,7 @@
 #include "InputManager.hpp"
 #include "StateMachine.hpp"
 #include "Window.hpp"
+#include "renderer.hpp"
 #include "Tools.hpp"
 #include <iostream>
 #include <memory>
@@ -13,8 +14,9 @@
 struct GframeData
 {
 	Window window;
+	Renderer Render;
 	StateMachine Machine;
-	InputManager inputManager;
+	InputManager Input;
 	AssetManager AssetManager;
 	Tools tools;
 };

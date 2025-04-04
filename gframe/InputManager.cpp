@@ -8,14 +8,9 @@ int InputManager::HWInputs::RESETTABLE_KEYS[_MAX_RESSETABLE_KEY_COUNT];
 int InputManager::HWInputs::RESETTABLE_KEY_COUNT = 0;
 glm::vec2 InputManager::HWInputs::LAST_MOUSE_POSITION(0.0f, 0.0f);
 char InputManager::HWInputs::TEST_MODE = 0;
-char InputManager::HWInputs::ReceivedMousePositionUpdate = 0;/*
-Window* HWInputs::WindowData = NULL;*/
+char InputManager::HWInputs::ReceivedMousePositionUpdate = 0;
+char InputManager::HWInputs::ReceivedMouseScrollUpdate = 0;
 
-// Functions
-//void InputManager::HWInputs::SetTestMode(char mode)
-//{
-//    TEST_MODE = mode;
-//}
 void InputManager::HWInputs::Update()
 {
     if (RESETTABLE_KEY_COUNT > 0)
@@ -42,6 +37,7 @@ void InputManager::HWInputs::Update()
     {
         Mouse.MouseDeltaPosition = glm::vec2(0.0f, 0.0f);
     }
+    Mouse.MouseScrollOffset = glm::vec2(0.0);
 }
 void InputManager::HWInputs::Initialise(GLFWwindow* window/*, Window* windowData*/)
 {
@@ -127,6 +123,7 @@ void InputManager::HWInputs::MouseButtonCallback(GLFWwindow* window, int button,
 void InputManager::HWInputs::ScrollCallback(GLFWwindow* window, double xoffset, double yoffset)
 {
     Mouse.MouseScrollOffset = glm::vec2((float)xoffset, (float)yoffset);
+    ReceivedMouseScrollUpdate = 1;
     if (TEST_MODE)
     {
         if (xoffset < 0) { printf("Mouse scrolled right\n"); }
@@ -134,4 +131,80 @@ void InputManager::HWInputs::ScrollCallback(GLFWwindow* window, double xoffset, 
         if (yoffset > 0) { printf("Mouse scrolled up\n"); }
         else if (yoffset < 0) { printf("Mouse scrolled down\n"); }
     }
+}
+
+void InputManager::Update()
+{
+    HWInputs::Update();
+}
+
+void InputManager::Initialise(GLFWwindow* window)
+{
+    HWInputs::Initialise(window);
+    refWindow = window;
+}
+
+void InputManager::SetMouseStatus(int status)
+{
+    HWInputs::SetMouseStatus(refWindow, status);
+}
+
+InputManager::MouseInputs InputManager::IMouse()
+{
+    return HWInputs::Mouse;
+}
+
+bool InputManager::Button(int button)
+{
+    return HWInputs::Mouse.MouseButton[button];
+}
+
+bool InputManager::ButtonDown(int button)
+{
+    return HWInputs::Mouse.MouseButtonDown[button];
+}
+
+bool InputManager::ButtonUp(int button)
+{
+    return HWInputs::Mouse.MouseButtonUp[button];
+}
+
+glm::vec2 InputManager::MousePosition()
+{
+    return HWInputs::Mouse.MousePosition;
+}
+
+glm::vec2 InputManager::MouseDeltaPosition()
+{
+    return HWInputs::Mouse.MouseDeltaPosition;
+}
+
+glm::vec2 InputManager::MouseScrollOffset()
+{
+    return HWInputs::Mouse.MouseScrollOffset;
+}
+
+int InputManager::MouseStatus()
+{
+    return HWInputs::Mouse.Status;
+}
+
+InputManager::KeyboardInputs InputManager::IKeyboard()
+{
+    return HWInputs::Keyboard;
+}
+
+bool InputManager::Key(int key)
+{
+    return HWInputs::Keyboard.Key[key];
+}
+
+bool InputManager::KeyDown(int key)
+{
+    return HWInputs::Keyboard.KeyDown[key];
+}
+
+bool InputManager::KeyUp(int key)
+{
+    return HWInputs::Keyboard.KeyUp[key];
 }

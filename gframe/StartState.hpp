@@ -1,5 +1,9 @@
 #include "State.hpp"
-
+#include <stdio.h>
+#include "InputManager.hpp"
+#include "renderer.hpp"
+#include "shader.hpp"
+#include "mesh.hpp"
 
 class StartState : public State
 {
@@ -18,4 +22,9 @@ public:
 
 private:
 	GframeDataRef _data;
+	InputManager Input;
+	Renderer Render;
+
+	Shader testShader;
+	Mesh testMesh;
 };
