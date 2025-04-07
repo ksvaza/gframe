@@ -22,8 +22,8 @@ public:
 
 private:
 	GframeDataRef _data;
-	InputManager Input;
-	Renderer Render;
+	InputManager Input = _data->Input;
+	Renderer Render = _data->Render;
 
 	Shader testShader;
 	Mesh testMesh;
