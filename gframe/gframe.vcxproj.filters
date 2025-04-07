@@ -75,9 +75,6 @@
     <ClCompile Include="shader.cpp">
       <Filter>Source Files\engine\rendering</Filter>
     </ClCompile>
-    <ClCompile Include="UsefulStructs.hpp">
-      <Filter>Header Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="State.hpp">
