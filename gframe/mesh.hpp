@@ -5,7 +5,6 @@
 #include "transform.hpp"
 #include <glm/glm.hpp>
 #include <string>
-#include <string_view>
 
 struct Vertex
 {
