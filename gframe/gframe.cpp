@@ -1,42 +1,57 @@
 #include "gframe.hpp"
-//#include "StartState.hpp"
-#include <iostream>
+#include "StartState.hpp"
 
-
-Game::Game(int width, int height, std::string title)
+Gframe::Gframe(int width, int height, std::string title)
 {
+    _data->window.Create(width, height, title);
+    _data->Machine.AddState(StateRef(new StartState(_data)), 0);
+    _data->Input.Initialise(_data->window.glWindow);
 
-	
-	//_data->window.create(sf::VideoMode(width, height), title, sf::Style::Fullscreen);
-	//_data->window.setMouseCursorVisible(0);
-	//_data->Machine.AddState(StateRef(new StartState(_data)), 0);
-	glfwSetTime();
-	Run();
+    glfwSetTime(0.0f);
+    Run();
 }
-void Game::Run()
+
+void Gframe::Run()
 {
-	
-	float newTime, frameTime, interpolation;
-	float currentTime = glfwGetTime();
-	float accumulator = 0.0f;
-	while (glfwWindowShouldClose(_data->window.))
-	{
-		_data->Machine.ProcessStateChanges();
-		newTime = glfwGetTime();
-		frameTime = newTime - currentTime;
-		if (frameTime > 0.25f)
-		{
-			frameTime = 0.25f;
-		}
-		currentTime = newTime;
-		accumulator += frameTime;
-		while (accumulator >= dt)
-		{
-			_data->Machine.GetActiveState()->HandleInput();
-			_data->Machine.GetActiveState()->Update(dt);
-			accumulator -= dt;
-		}
-		interpolation = accumulator / dt;
-		_data->Machine.GetActiveState()->Draw(interpolation);
-	}
+    const float tps = 60.0f;
+    const float fps = 60.0f;
+    float dt = 1.0f / 60.0f;
+
+    float newTime, frameTime, interpolation;
+    float currentTime = (float)glfwGetTime();
+    float accumulator = 0.0f;
+
+    while (!glfwWindowShouldClose(_data->window.glWindow))
+    {
+        _data->Machine.ProcessStateChanges();
+
+        newTime = (float)glfwGetTime();
+        frameTime = newTime - currentTime;
+
+        if (frameTime > 0.25f)
+        {
+            frameTime = 0.25f;
+        }
+
+        currentTime = newTime;
+        accumulator += frameTime;
+
+        dt = frameTime;
+
+        while (accumulator >= dt)
+        {
+            _data->Machine.GetActiveState()->HandleInput();
+            _data->Machine.GetActiveState()->Update(dt);
+            accumulator -= dt;
+        }
+
+        interpolation = accumulator / dt;
+
+        _data->Machine.GetActiveState()->Draw(interpolation);
+
+        _data->Input.Update();
+
+        glfwSwapBuffers(_data->window.glWindow);
+        glfwPollEvents();
+    }
 }

@@ -2,10 +2,13 @@
 
 #include <map>
 #include <string>
+#include <vector>
+
 
 class AssetManager
 {
 public:
+
 	AssetManager() {};
 	~AssetManager() {};
 	void LoadTexture(std::string name, std::string FileName);
@@ -21,7 +24,7 @@ public:
 	//void UnloadSound();
 
 private:
-	//std::map <std::string, sf::Texture> _textures;
+	std::map <std::string, unsigned char*> _textures;
 	//std::map <std::string, sf::Font> _fonts;
 	//std::map <std::string, sf::SoundBuffer> _sounds;
 };
