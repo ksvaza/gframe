@@ -5,12 +5,14 @@
 
 class InputManager
 {
-public:
+private:
     // Constants
     constexpr static int _MAX_RESSETABLE_KEY_COUNT = 20;
     constexpr static int _MAX_KEY_COUNT = 347; // 346 max keycode
     constexpr static int _MAX_MOUSE_BUTTON_COUNT = 5;
 
+    GLFWwindow* refWindow;
+public:
 
     // Structs
     typedef struct {
@@ -46,13 +48,35 @@ public:
         static glm::vec2 LAST_MOUSE_POSITION;
         static char TEST_MODE;
         static char ReceivedMousePositionUpdate;
+        static char ReceivedMouseScrollUpdate;
 
         static void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mods);
         static void CursorPositionCallback(GLFWwindow* window, double xpos, double ypos);
         static void MouseButtonCallback(GLFWwindow* window, int button, int action, int mods);
         static void ScrollCallback(GLFWwindow* window, double xoffset, double yoffset);
 	};
+
 	bool IsSpriteClicked();
 	bool IsSpriteHovered();
+
+    void Update();
+    void Initialise(GLFWwindow* window);
+    void SetMouseStatus(int status);
+
+    MouseInputs IMouse();
+    bool Button(int button);
+    bool ButtonDown(int button);
+    bool ButtonUp(int button);
+    glm::vec2 MousePosition();
+    glm::vec2 MouseDeltaPosition();
+    glm::vec2 MouseScrollOffset();
+    int MouseStatus();
+
+    KeyboardInputs IKeyboard();
+    bool Key(int key);
+    bool KeyDown(int key);
+    bool KeyUp(int key);
+
+
 //	sf::Vector2i GetMousePosition();
 };

@@ -4,29 +4,33 @@
 #include "InputManager.hpp"
 #include "StateMachine.hpp"
 #include "Window.hpp"
+#include "renderer.hpp"
 #include "Tools.hpp"
-
+#include <iostream>
 #include <memory>
 #include <string>
 
 
-struct GameData
+struct GframeData
 {
 	Window window;
+	Renderer Render;
 	StateMachine Machine;
-	InputManager inputManager;
-	//AssetManager AssetManager;
+	InputManager Input;
+	AssetManager AssetManager;
 	Tools tools;
 };
 
-typedef std::shared_ptr<GameData> GameDataRef;
-class Game
+typedef std::shared_ptr<GframeData> GframeDataRef;
+class Gframe
 {
 public:
-	Game(int width, int height, std::string title);
+	Gframe(int width, int height, std::string title);
 private:
 	const float dt = 1.0f / 60.0f;	
-	GameDataRef _data = std::make_shared<GameData>();
+	GframeDataRef _data = std::make_shared<GframeData>();
+
+	
 
 	void Run();
 };
