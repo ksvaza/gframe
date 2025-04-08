@@ -15,35 +15,10 @@ Mesh::Mesh()
 
 int Mesh::Create(int vertexCount, int faceCount)
 {
-    if (vertexCount <= 0)
-    {
-        return 0;
-    }
-    if (vertices) { free(vertices); }
-    this->vertexCount = vertexCount;
-    vertices = (Vertex*)malloc(sizeof(Vertex) * vertexCount);
-    if (!vertices)
-    {
-        printf("Failed to allocate vertices!\n");
-        Delete();
-        return 1;
-    }
-
-    if (faceCount <= 0)
-    {
-        return 0;
-    }
-    if (faces) { free(faces); }
-    this->faceCount = faceCount;
-    faces = (Face*)malloc(sizeof(Face) * faceCount);
-    if (!faces)
-    {
-        printf("Failed to allocate faces!\n");
-        Delete();
-        return 1;
-    }
-
-    return 0;
+    int ret_val = 0;
+    ret_val = ret_val | CreateV(vertexCount);
+    ret_val = ret_val | CreateF(faceCount);
+    return ret_val;
 }
 
 int Mesh::CreateV(int vertexCount)
@@ -52,8 +27,7 @@ int Mesh::CreateV(int vertexCount)
     {
         return 0;
     }
-    if (vertices) { free(vertices); }
-    this->vertexCount = vertexCount;
+    if (vertices) { free(vertices); vertices = NULL; }
     vertices = (Vertex*)malloc(sizeof(Vertex) * vertexCount);
     if (!vertices)
     {
@@ -61,6 +35,7 @@ int Mesh::CreateV(int vertexCount)
         Delete();
         return 1;
     }
+    this->vertexCount = vertexCount;
 
     return 0;
 }
@@ -71,8 +46,7 @@ int Mesh::CreateF(int faceCount)
     {
         return 0;
     }
-    if (faces) { free(faces); }
-    this->faceCount = faceCount;
+    if (faces) { free(faces); faces = NULL; }
     faces = (Face*)malloc(sizeof(Face) * faceCount);
     if (!faces)
     {
@@ -80,41 +54,15 @@ int Mesh::CreateF(int faceCount)
         Delete();
         return 1;
     }
+    this->faceCount = faceCount;
 
     return 0;
 }
 
 int Mesh::Recreate(int vertexCount, int faceCount)
 {
-    if (vertices && vertexCount > 0)
-    {
-        void* temp = realloc(vertices, sizeof(Vertex) * vertexCount);
-        if (!temp)
-        {
-            printf("Failed to reallocate vertices!\n");
-            Delete();
-            return 1;
-        }
-        if (vertices != temp) { free(vertices); }
-        vertices = (Vertex*)temp;
-        this->vertexCount = vertexCount;
-    }
-    else { CreateV(vertexCount); }
-
-    if (faces && faceCount > 0)
-    {
-        void* temp = realloc(faces, sizeof(Face) * faceCount);
-        if (!temp)
-        {
-            printf("Failed to reallocate faces!\n");
-            Delete();
-            return 1;
-        }
-        if (faces != temp) { free(faces); }
-        faces = (Face*)temp;
-        this->faceCount = faceCount;
-    }
-    else { CreateF(faceCount); }
+    RecreateV(vertexCount);
+    RecreateF(faceCount);
 
     return 0;
 }
@@ -130,8 +78,7 @@ int Mesh::RecreateV(int vertexCount)
             Delete();
             return 1;
         }
-        if (vertices != temp) { free(vertices); }
-        vertices = (Vertex*)temp;
+        if (vertices != temp) { free(vertices); vertices = (Vertex*)temp; }
         this->vertexCount = vertexCount;
     }
     else { CreateV(vertexCount); }
@@ -150,8 +97,7 @@ int Mesh::RecreateF(int faceCount)
             Delete();
             return 1;
         }
-        if (faces != temp) { free(faces); }
-        faces = (Face*)temp;
+        if (faces != temp) { free(faces); faces = (Face*)temp; }
         this->faceCount = faceCount;
     }
     else { CreateF(faceCount); }
