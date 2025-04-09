@@ -78,7 +78,7 @@ int Mesh::RecreateV(int vertexCount)
             Delete();
             return 1;
         }
-        if (vertices != temp) { free(vertices); vertices = (Vertex*)temp; }
+        vertices = (Vertex*)temp;
         this->vertexCount = vertexCount;
     }
     else { CreateV(vertexCount); }
@@ -97,7 +97,7 @@ int Mesh::RecreateF(int faceCount)
             Delete();
             return 1;
         }
-        if (faces != temp) { free(faces); faces = (Face*)temp; }
+        faces = (Face*)temp;
         this->faceCount = faceCount;
     }
     else { CreateF(faceCount); }
