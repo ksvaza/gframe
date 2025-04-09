@@ -1,5 +1,7 @@
 #include "gframe.hpp"
 #include "StartState.hpp"
+#define _USE_MATH_DEFINES
+#include <math.h>
 
 void StartState::Init()
 {
@@ -9,16 +11,23 @@ void StartState::Init()
 	//testMesh.vertices[2] = Vertex{  0.0,  0.5, 0.0, 1.0, (float)0.8431372549, 0.0, 1.0, 0.0, 0.0 };
 	//testMesh.faces[0] = Face{ 0, 1, 2, glm::vec3(0.0), -1 };
 
-	Mesh circleMesh, rectMesh;
-	Mesh::Construct::Circle(circleMesh, glm::vec2(0.0), 0.7, 5);
+	Mesh circleMesh, rectMesh, lineMesh;
+
+	Mesh::Construct::RegularPolygon(circleMesh, glm::vec3(0.0), 0.0, 0.6, 90);
 	Mesh::Modify::Colour(circleMesh, glm::vec4(1.0, (float)0.8431372549, 0.0, 1.0));
 	Mesh::Bake::Triangles(circleMesh);
-	Mesh::Construct::Rectangle(rectMesh, glm::vec2(0.0), glm::vec2(1.0));
+
+	Mesh::Construct::Rectangle(rectMesh, glm::vec3(0.0), 0.0, glm::vec2(1.0));
 	Mesh::Modify::Colour(rectMesh, glm::vec4(1.0, (float)0.8431372549, 0.0, 1.0));
-	Mesh::Bake::Triangles(rectMesh);
+	Mesh::Bake::TrianglesC(rectMesh);
+
+	Mesh::Construct::Outline(lineMesh, circleMesh, 0.02);
+	Mesh::Modify::Colour(lineMesh, glm::vec4(1.0, 1.0, 0.0, 1.0));
+	Mesh::Bake::RectanglesC(lineMesh);
 
 	Mesh::Modify::Append(testMesh, circleMesh);
-	Mesh::Modify::Append(testMesh, rectMesh);
+	//Mesh::Modify::Append(testMesh, rectMesh);
+	Mesh::Modify::Append(testMesh, lineMesh);
 
 	//Mesh::Construct::Circle(testMesh, glm::vec2(0.0), 0.5, 2000);
 	testMesh.Print();

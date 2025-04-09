@@ -156,54 +156,180 @@ std::ostream& operator<<(std::ostream& os, const Mesh& mesh)
 	return os;
 }
 
-void Mesh::Construct::Rectangle(Mesh& mesh, glm::vec2 position, glm::vec2 size)
+void Mesh::Construct::Rectangle(Mesh& mesh, glm::vec3 position, float angle, glm::vec2 size)
 {
     mesh.CreateV(4);
     Vertex* v = mesh.vertices;
 
+    // Construct the rectangle
     v[0] = Vertex{
-        -size.x / 2.0f + position.x,
-        -size.y / 2.0f + position.y,
-        0.0, 1.0, 1.0, 1.0, 1.0, 0.0, 0.0
+        -size.x / 2.0f,
+        -size.y / 2.0f,
+        position.z,
+        1.0, 1.0, 1.0, 1.0, 0.0, 0.0
     };
     v[1] = Vertex{
-        size.x / 2.0f + position.x,
-        -size.y / 2.0f + position.y,
-        0.0, 1.0, 1.0, 1.0, 1.0, 1.0, 0.0
+        size.x / 2.0f,
+        -size.y / 2.0f,
+        position.z,
+        1.0, 1.0, 1.0, 1.0, 1.0, 0.0
     };
     v[2] = Vertex{
-        size.x / 2.0f + position.x,
-        size.y / 2.0f + position.y,
-        0.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0
+        size.x / 2.0f,
+        size.y / 2.0f,
+        position.z,
+        1.0, 1.0, 1.0, 1.0, 1.0, 1.0
     };
     v[3] = Vertex{
-        -size.x / 2.0f + position.x,
-        size.y / 2.0f + position.y,
-        0.0, 1.0, 1.0, 1.0, 1.0, 0.0, 1.0
+        -size.x / 2.0f,
+        size.y / 2.0f,
+        position.z,
+        1.0, 1.0, 1.0, 1.0, 0.0, 1.0
     };
+
+    // Rotate the rectangle about the origin and move to position
+    v[0].x = v[0].x * cos(angle) - v[0].y * sin(angle) + position.x;
+    v[0].y = v[0].x * sin(angle) + v[0].y * cos(angle) + position.y;
+    v[1].x = v[1].x * cos(angle) - v[1].y * sin(angle) + position.x;
+    v[1].y = v[1].x * sin(angle) + v[1].y * cos(angle) + position.y;
+    v[2].x = v[2].x * cos(angle) - v[2].y * sin(angle) + position.x;
+    v[2].y = v[2].x * sin(angle) + v[2].y * cos(angle) + position.y;
+    v[3].x = v[3].x * cos(angle) - v[3].y * sin(angle) + position.x;
+    v[3].y = v[3].x * sin(angle) + v[3].y * cos(angle) + position.y;
 }
 
-void Mesh::Construct::Circle(Mesh& mesh, glm::vec2 position, float radius, int segments)
+void Mesh::Construct::RegularPolygon(Mesh& mesh, glm::vec3 position, float angle, float radius, int segments)
 {
     mesh.CreateV(segments);
     Vertex* v = mesh.vertices;
 
-    float angle = 0.0;
+    float aAngle = angle;
     const float dAngle = 2.0 * M_PI / (double)segments;
     for (int i = 0; i < segments; i++)
     {
-        float x = radius * cos(angle) + position.x;
-        float y = radius * sin(angle) + position.y;
-        float tu = (cos(angle) + 1.0) / 2.0;
-        float tv = (sin(angle) + 1.0) / 2.0;;
+        float x = radius * cos(aAngle) + position.x;
+        float y = radius * sin(aAngle) + position.y;
+        float tu = (cos(aAngle) + 1.0) / 2.0;
+        float tv = (sin(aAngle) + 1.0) / 2.0;;
 
         v[i] = Vertex{
-            x, y, 0.0, 1.0, 1.0, 1.0, 1.0, tu, tv
+            x, y, position.z, 1.0, 1.0, 1.0, 1.0, tu, tv
         };
 
-        angle += dAngle;
+        aAngle += dAngle;
     }
 }
+
+void Mesh::Construct::Line(Mesh& mesh, glm::vec3 start, glm::vec3 end, float width)
+{
+    mesh.CreateV(4);
+    Vertex* v = mesh.vertices;
+
+    float dst = glm::distance(glm::vec2(start), glm::vec2(end));
+    glm::vec2 dif = glm::vec2(end - start);
+
+    // Construct points of the line as a rectangle
+    v[0] = Vertex{
+        (-dif.y * width) / (dst * 2.0f) + start.x,
+        (dif.x * width) / (dst * 2.0f) + start.y,
+        start.z,
+        1.0, 1.0, 1.0, 1.0, 0.0, 0.0
+    };
+    v[1] = Vertex{
+        (-dif.y * width) / (dst * 2.0f) + end.x,
+        (dif.x * width) / (dst * 2.0f) + end.y,
+        end.z,
+        1.0, 1.0, 1.0, 1.0, 0.0, 0.0
+    };
+    v[2] = Vertex{
+        (dif.y * width) / (dst * 2.0f) + end.x,
+        (-dif.x * width) / (dst * 2.0f) + end.y,
+        end.z,
+        1.0, 1.0, 1.0, 1.0, 0.0, 0.0
+    };
+    v[3] = Vertex{
+        (dif.y * width) / (dst * 2.0f) + start.x,
+        (-dif.x * width) / (dst * 2.0f) + start.y,
+        start.z,
+        1.0, 1.0, 1.0, 1.0, 0.0, 0.0
+    };
+}
+
+void Mesh::Construct::Lines(Mesh& mesh, glm::vec3* endpoints, int pointcount, float width)
+{
+    if (pointcount < 1) { return; }
+    mesh.CreateV(pointcount * 2);
+    Vertex* v = mesh.vertices;
+
+    float sDst = glm::distance(glm::vec2(endpoints[0]), glm::vec2(endpoints[1]));
+    glm::vec2 sDif = glm::vec2(endpoints[0] - endpoints[1]);
+
+    // Construct start points
+    v[0] = Vertex{
+        (-sDif.y * width) / (sDst * 2.0f) + endpoints[0].x,
+        (sDif.x * width) / (sDst * 2.0f) + endpoints[0].y,
+        endpoints[0].z,
+        1.0, 1.0, 1.0, 1.0, 0.0, 0.0
+    };
+    v[1] = Vertex{
+        (sDif.y * width) / (sDst * 2.0f) + endpoints[0].x,
+        (-sDif.x * width) / (sDst * 2.0f) + endpoints[0].y,
+        endpoints[0].z,
+        1.0, 1.0, 1.0, 1.0, 0.0, 0.0
+    };
+
+    for (int i = 1; i < pointcount - 1; i++)
+    {
+        float dst = glm::distance(glm::vec2(endpoints[i - 1]), glm::vec2(endpoints[i + 1]));
+        glm::vec2 dif = glm::vec2(endpoints[i - 1] - endpoints[i + 1]);
+
+        // Construct points
+        v[i * 2] = Vertex{
+            (-dif.y * width) / (dst * 2.0f) + endpoints[i].x,
+            (dif.x * width) / (dst * 2.0f) + endpoints[i].y,
+            endpoints[i].z,
+            1.0, 1.0, 1.0, 1.0, 0.0, 0.0
+        };
+        v[i * 2 + 1] = Vertex{
+            (dif.y * width) / (dst * 2.0f) + endpoints[i].x,
+            (-dif.x * width) / (dst * 2.0f) + endpoints[i].y,
+            endpoints[i].z,
+            1.0, 1.0, 1.0, 1.0, 0.0, 0.0
+        };
+    }
+
+    float eDst = glm::distance(glm::vec2(endpoints[pointcount - 2]), glm::vec2(endpoints[pointcount - 1]));
+    glm::vec2 eDif = glm::vec2(endpoints[pointcount - 2] - endpoints[pointcount - 1]);
+
+    // Construct start points
+    v[pointcount * 2 - 2] = Vertex{
+        (-eDif.y * width) / (eDst * 2.0f) + endpoints[pointcount - 1].x,
+        (eDif.x * width) / (eDst * 2.0f) + endpoints[pointcount - 1].y,
+        endpoints[pointcount - 1].z,
+        1.0, 1.0, 1.0, 1.0, 0.0, 0.0
+    };
+    v[pointcount * 2 - 1] = Vertex{
+        (eDif.y * width) / (eDst * 2.0f) + endpoints[pointcount - 1].x,
+        (-eDif.x * width) / (eDst * 2.0f) + endpoints[pointcount - 1].y,
+        endpoints[pointcount - 1].z,
+        1.0, 1.0, 1.0, 1.0, 0.0, 0.0
+    };
+}
+
+void Mesh::Construct::Outline(Mesh& mesh, Mesh& source, float width)
+{
+    int c = source.vertexCount;
+    glm::vec3* p = (glm::vec3*)malloc(sizeof(glm::vec3) * (c + 1));
+    if (!p) { return; }
+    for (int i = 0; i < c; i++)
+    {
+        p[i] = glm::vec3(source.vertices[i].x, source.vertices[i].y, source.vertices[i].z);
+    }
+    p[c] = glm::vec3(source.vertices[0].x, source.vertices[0].y, source.vertices[0].z);
+    Lines(mesh, p, c + 1, width);
+    free(p);
+}
+
 
 int Mesh::Bake::Triangles(Mesh& mesh)
 {
@@ -222,6 +348,59 @@ int Mesh::Bake::Triangles(Mesh& mesh)
         };
     }
     
+    return 0;
+}
+
+int Mesh::Bake::TrianglesC(Mesh& mesh)
+{
+    int faceCount = mesh.vertexCount / 2;
+    if (faceCount <= 0) { return 1; }
+
+    mesh.CreateF(faceCount);
+    Face* f = mesh.faces;
+
+    for (int i = 0; i < mesh.faceCount; i++)
+    {
+        f[i] = Face{
+            i * 2, i * 2 + 1, i * 2 + 2,
+            glm::vec3(0.0),
+            -1
+        };
+        if (i * 2 + 2 == mesh.vertexCount)
+        {
+            f[i].index[2] = 0;
+        }
+    }
+
+    return 0;
+}
+
+int Mesh::Bake::RectanglesC(Mesh& mesh)
+{
+    if (mesh.vertexCount < 4) { return 1; }
+    int faceCount = mesh.vertexCount - 2;
+    if (faceCount <= 0) { return 1; }
+
+    mesh.CreateF(faceCount);
+    Face* f = mesh.faces;
+
+    for (int i = 0; i < mesh.faceCount / 2; i++)
+    {
+        f[i * 2] = Face{
+            i * 2, i * 2 + 2, i * 2 + 1,
+            glm::vec3(0.0),
+            -1
+        };
+        if (i * 2 + 1 < mesh.faceCount)
+        {
+            f[i * 2 + 1] = Face{
+                i * 2 + 1, i * 2 + 2, i * 2 + 3,
+                glm::vec3(0.0),
+                -1
+            };
+        }
+    }
+
     return 0;
 }
 

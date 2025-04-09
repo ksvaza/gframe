@@ -61,14 +61,19 @@ public:
 	class Construct
 	{
 	public:
-		static void Rectangle(Mesh& mesh, glm::vec2 position, glm::vec2 size);
-		static void Circle(Mesh& mesh, glm::vec2 position, float radius, int segments);
+		static void Rectangle(Mesh& mesh, glm::vec3 position, float angle, glm::vec2 size);
+		static void RegularPolygon(Mesh& mesh, glm::vec3 position, float angle, float radius, int segments);
+		static void Line(Mesh& mesh, glm::vec3 start, glm::vec3 end, float width);
+		static void Lines(Mesh& mesh, glm::vec3* endpoints, int pointcount, float width);
+		static void Outline(Mesh& mesh, Mesh& source, float width);
 		// Low level mesh vertex generation
 	};
 	class Bake
 	{
 	public:
-		static int Triangles(Mesh& mesh);
+		static int Triangles(Mesh& mesh); // Generate triangles based on the first point to every next pair of points.
+		static int TrianglesC(Mesh& mesh); // Generate a triangles for every three points and next triangle starting on the end of the last.
+		static int RectanglesC(Mesh& mesh); // Generate every 4 points as a rectangle in continuous mode - every next rectangle uses last 2 points of last rectangle.
 		static int Lines(Mesh& mesh);
 		// Options for building the faces of the mesh
 	};
