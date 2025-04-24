@@ -1,12 +1,13 @@
 #include "gframe.hpp"
 #include "StartState.hpp"
+#include <vector>
 
 Gframe::Gframe(int width, int height, std::string title)
 {
     _data->window.Create(width, height, title);
     _data->Machine.AddState(StateRef(new StartState(_data)), 0);
     _data->Input.Initialise(_data->window.glWindow);
-
+    
     glfwSetTime(0.0f);
     Run();
 }

@@ -53,4 +53,6 @@ public:
 	Mesh();
 	~Mesh() {}
 };
+
+
 std::ostream& operator<<(std::ostream& os, const Mesh& mesh);

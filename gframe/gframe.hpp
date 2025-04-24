@@ -17,7 +17,7 @@ struct GframeData
 	Renderer Render;
 	StateMachine Machine;
 	InputManager Input;
-	AssetManager AssetManager;
+	AssetManager assetManager;
 	Tools tools;
 };
 
