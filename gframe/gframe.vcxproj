@@ -147,7 +147,7 @@
     <ClCompile Include="StartState.cpp" />
     <ClCompile Include="StateMachine.cpp" />
     <ClCompile Include="StateMachine.hpp" />
-    <ClCompile Include="stb_image.cpp" />
+    <ClCompile Include="stbi_image.cpp" />
     <ClCompile Include="Tools.cpp" />
     <ClCompile Include="Tools.hpp" />
     <ClCompile Include="transform.cpp" />
