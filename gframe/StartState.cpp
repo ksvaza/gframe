@@ -7,7 +7,9 @@
 
 void StartState::Init()
 {
-
+	yaw = -90.0f;
+	pitch = 0;
+	CameraPos = glm::vec3(0.0f, 0.0f, 3.0f);
 	_data->AssetManager.LoadTexture("check", "C:/Users/jekabins/Downloads/test.png");
 	//_data->AssetManager.UnloadTexture("check");
 
@@ -66,29 +68,48 @@ void StartState::Init()
 
 void StartState::HandleInput()
 {
+
+	float sensitivity = 0.1f;
+
+	if (Input.Button(0))
+	{
+		yaw += Input.MouseDeltaPosition().x * sensitivity;
+		pitch -= Input.MouseDeltaPosition().y * sensitivity;
+
+		if (pitch > 89.0f) pitch = 89.0f;
+		if (pitch < -89.0f) pitch = -89.0f;
+
+		glfwSetInputMode(_data->window.glWindow, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+	}
+	else
+		glfwSetInputMode(_data->window.glWindow, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+	
+
+
+
 	if (Input.Key(GLFW_KEY_W))
 	{
-		testMesh.transform.position.y += 0.01;
+		CameraPos.z -= 0.05;
 	}
 	if (Input.Key(GLFW_KEY_S))
 	{
-		testMesh.transform.position.y -= 0.01;
+		CameraPos.z += 0.05;
 	}
 	if (Input.Key(GLFW_KEY_A))
 	{
-		testMesh.transform.position.x -= 0.01;
+		CameraPos.x -= 0.05;
 	}
 	if (Input.Key(GLFW_KEY_D))
 	{
-		testMesh.transform.position.x += 0.01;
+		CameraPos.x += 0.05;
 	}
 	if (Input.Key(GLFW_KEY_SPACE))
 	{
-		testMesh.transform.position.z += 1;
+		CameraPos.y += 0.05;
 	}
 	if (Input.Key(GLFW_KEY_LEFT_SHIFT))
 	{
-		testMesh.transform.position.z -= 1;
+		CameraPos.y -= 0.05;
 	}
 
 
@@ -121,10 +142,15 @@ void StartState::Update(float dt)
 
 void StartState::Draw(float dt)
 {
+	//std::cout << CameraFront.x << ' ' << CameraFront.y << ' ' << CameraFront.z << '\n';
+	std::cout << yaw << '\n';
+	CameraFront = glm::normalize(glm::vec3(cos(glm::radians(yaw)) * cos(glm::radians(pitch)), 
+		sin(glm::radians(pitch)),
+		sin(glm::radians(yaw)) * cos(glm::radians(pitch))));
 	glm::mat4 viewMatrix = glm::lookAt(
-		glm::vec3(0.0f, 0.0f, 3.0f),
-		glm::vec3(0.0f, 0.0f, 0.0f),
-		glm::vec3(0.0f, 1.0f, 0.0f)
+		CameraPos, //camera pos
+		CameraFront + CameraPos, //look at vector
+		glm::vec3(0.0f, 1.0f, 0.0f)  //Up Direction
 	);
 
 	float aspectRatio = (float)_data->window.width / (float)_data->window.height;

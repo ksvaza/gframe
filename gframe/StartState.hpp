@@ -27,4 +27,10 @@ private:
 
 	Shader testShader;
 	Mesh testMesh;
+
+	glm::vec3 CameraPos;
+	glm::vec3 CameraFront;
+
+	float yaw;
+	float pitch;
 };
