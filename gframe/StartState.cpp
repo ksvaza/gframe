@@ -1,12 +1,30 @@
 #include "gframe.hpp"
 #include "StartState.hpp"
+#define _USE_MATH_DEFINES
+#include <math.h>
+#include "texture.hpp"
 
 void StartState::Init()
 {
-	_data->assetManager.LoadTexture("check", "C:/Users/jekabs.vidrusks/source/repos/gframe/test.png");
-	std::cout << sizeof(_data->assetManager.GetTexture("check")) << std::endl;
-	_data->assetManager.UnloadTexture("check");
-	std::cout << sizeof(_data->assetManager.GetTexture("check")) << std::endl;
+
+	_data->AssetManager.LoadTexture("check", "C:/Users/jekabins/Downloads/test.png");
+	//_data->AssetManager.UnloadTexture("check");
+
+	Pixel3* pixels = _data->AssetManager.GetTexture("check").data.ch3;
+	std::cout << _data->AssetManager.GetTexture("check").nrChannels << '\n' << '\n';
+	//for (int i = 0; i < _data->AssetManager.GetTexture("check").width * _data->AssetManager.GetTexture("check").height;i++)
+	//{
+	//	/*std::cout << "Pixel " << i << ": "
+	//		<< +pixels[i].r << ", "
+	//		<< +pixels[i].g << ", "
+	//		<< +pixels[i].b << ", "
+	//		<< +pixels[i].a << "\n";*/
+	//	std::cout << "Pixel " << i << ": "
+	//		<< +pixels[i].r << ", "
+	//		<< +pixels[i].g << ", "
+	//		<< +pixels[i].b << "\n";
+	//}
+
 
 	//testMesh.Create(3, 1);
 	//testMesh.vertices[0] = Vertex{ -0.5, -0.5, 0.0, 1.0, (float)0.8431372549, 0.0, 1.0, 0.0, 0.0 };
@@ -14,7 +32,8 @@ void StartState::Init()
 	//testMesh.vertices[2] = Vertex{  0.0,  0.5, 0.0, 1.0, (float)0.8431372549, 0.0, 1.0, 0.0, 0.0 };
 	//testMesh.faces[0] = Face{ 0, 1, 2, glm::vec3(0.0), -1 };
 
-	Mesh circleMesh, rectMesh, lineMesh, centerCircle;
+
+	Mesh circleMesh, rectMesh, lineMesh;
 
 	Mesh::Construct::RegularPolygon(circleMesh, glm::vec3(0.0), 0.0, 0.6, 90);
 	Mesh::Modify::Colour(circleMesh, glm::vec4(1.0, (float)0.8431372549, 0.0, 1.0));
@@ -28,15 +47,12 @@ void StartState::Init()
 	Mesh::Modify::Colour(lineMesh, glm::vec4(1.0, 1.0, 0.0, 1.0));
 	Mesh::Bake::RectanglesC(lineMesh);
 
-	Mesh::Construct::RegularPolygon(centerCircle, glm::vec3(0.0), 0.0, 0.2, 6);
-	Mesh::Modify::Colour(centerCircle, glm::vec4(0.8, (float)0.0, 0.0, 1.0));
-	Mesh::Bake::Triangles(centerCircle);
 
 	Mesh::Modify::Append(testMesh, circleMesh);
-	Mesh::Modify::Append(testMesh, rectMesh);
+	//Mesh::Modify::Append(testMesh, rectMesh);
 	Mesh::Modify::Append(testMesh, lineMesh);
-	Mesh::Modify::Append(testMesh, centerCircle);
 
+	testMesh.transform.scale = glm::vec3(1.0);
 	//Mesh::Construct::Circle(testMesh, glm::vec2(0.0), 0.5, 2000);
 	testMesh.Print();
 
@@ -49,13 +65,33 @@ void StartState::Init()
 
 void StartState::HandleInput()
 {
+	if (Input.Key(GLFW_KEY_W))
+	{
+		testMesh.transform.position.y += 0.01;
+	}
+	if (Input.Key(GLFW_KEY_S))
+	{
+		testMesh.transform.position.y -= 0.01;
+	}
+	if (Input.Key(GLFW_KEY_A))
+	{
+		testMesh.transform.position.x -= 0.01;
+	}
+	if (Input.Key(GLFW_KEY_D))
+	{
+		testMesh.transform.position.x += 0.01;
+	}
+
+
 	if (Input.KeyDown(GLFW_KEY_E))
 	{
 		printf("Key Down 'E'\n");
+		Mesh::Modify::Colour(testMesh, glm::vec4(0.0));
 	}
 	else if (Input.KeyUp(GLFW_KEY_E))
 	{
 		printf("Key Up 'E\n");
+		Mesh::Modify::Colour(testMesh, glm::vec4(1.0));
 	}
 
 	if (Input.MouseScrollOffset().y > 0)
@@ -70,7 +106,8 @@ void StartState::HandleInput()
 
 void StartState::Update(float dt)
 {
-
+	//testMesh.transform.position.x += 0;
+	//std::cout << testMesh.transform.position.x << ' ';
 }
 
 void StartState::Draw(float dt)

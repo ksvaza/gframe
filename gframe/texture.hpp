@@ -1,16 +1,18 @@
 #pragma once
+#include <stddef.h>
+
+struct Pixel3
+{
+	char r, g, b;
+};
+struct Pixel4
+{
+	char r, g, b, a;
+};
 
 class Texture
 {
 private:
-	struct Pixel3
-	{
-		char r, g, b;
-	};
-	struct Pixel4
-	{
-		char r, g, b, a;
-	};
 	union Data
 	{
 		void* raw = NULL;

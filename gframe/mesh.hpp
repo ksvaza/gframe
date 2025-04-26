@@ -29,6 +29,14 @@ struct TextureRef
 class Mesh
 {
 public:
+	unsigned int VAO = 0;
+	unsigned int VBO = 0;
+	unsigned int EBO = 0;
+	bool uploaded = false;
+
+	void UploadToGPU();
+
+
 	Vertex* vertices = NULL;
 	int vertexCount = 0;
 
@@ -41,7 +49,12 @@ public:
 	Transform transform;
 	glm::vec4 colour = glm::vec4(1.0);
 
-	void Create(int vertexCount, int faceCount);
+	int Create(int vertexCount, int faceCount);
+	int CreateV(int vertexCount);
+	int CreateF(int faceCount);
+	int Recreate(int vertexCount, int faceCount);
+	int RecreateV(int vertexCount);
+	int RecreateF(int faceCount);
 	void Delete();
 
 	std::string sPrint();
@@ -52,6 +65,38 @@ public:
 
 	Mesh();
 	~Mesh() {}
+
+	class Construct
+	{
+	public:
+		static void Rectangle(Mesh& mesh, glm::vec3 position, float angle, glm::vec2 size);
+		static void RegularPolygon(Mesh& mesh, glm::vec3 position, float angle, float radius, int segments);
+		static void Line(Mesh& mesh, glm::vec3 start, glm::vec3 end, float width);
+		static void Lines(Mesh& mesh, glm::vec3* endpoints, int pointcount, float width);
+		static void Outline(Mesh& mesh, Mesh& source, float width);
+		// Low level mesh vertex generation
+	};
+	class Bake
+	{
+	public:
+		static int Triangles(Mesh& mesh); // Generate triangles based on the first point to every next pair of points.
+		static int TrianglesC(Mesh& mesh); // Generate a triangles for every three points and next triangle starting on the end of the last.
+		static int RectanglesC(Mesh& mesh); // Generate every 4 points as a rectangle in continuous mode - every next rectangle uses last 2 points of last rectangle.
+		static int Lines(Mesh& mesh);
+		// Options for building the faces of the mesh
+	};
+	class Make
+	{
+	public:
+		// Higher level operations on meshes
+	};
+	class Modify
+	{
+	public:
+		static void Colour(Mesh& mesh, glm::vec4 colour);
+
+		static int Append(Mesh& mesh, Mesh& add);
+	};
 };
 
 

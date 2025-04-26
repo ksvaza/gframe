@@ -14,7 +14,7 @@ public:
 	int8_t LoadTexture(std::string_view name, std::string_view FileName);
 	Texture& GetTexture(std::string_view name);
 	int8_t UnloadTexture(std::string_view name);
-	
+
 	int8_t LoadFont(std::string_view name, std::string_view FileName);
 	Texture& GetFont(std::string_view name);
 	int8_t UnloadFont(std::string_view name);

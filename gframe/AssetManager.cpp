@@ -23,14 +23,26 @@ int8_t  AssetManager::LoadTexture(std::string_view name, std::string_view FileNa
 }
 Texture& AssetManager::GetTexture(std::string_view name)
 {
-	return _textures[name];
+	static Texture ErrorTexture; // kaut kads error texture ka piem. pink and black error texture
+	auto it = _textures.find(name);
+	if (it != _textures.end())
+	{
+		return it->second;
+	}
+	return ErrorTexture;
 }
+
 int8_t AssetManager::UnloadTexture(std::string_view name)
 {
-	stbi_image_free(_textures[name].data.raw);
-	_textures[name].data.raw = NULL;
-	return 0;
+	auto it = _textures.find(name);
+	if (it != _textures.end())
+	{
+		stbi_image_free(it->second.data.raw);
+		_textures.erase(it);
+	}
+	return -1;
 }
+
 
 int8_t AssetManager::LoadFont(std::string_view name, std::string_view FileName)
 {
