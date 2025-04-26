@@ -1,4 +1,5 @@
 #include "renderer.hpp"
+#include <glm/gtc/type_ptr.hpp>
 
 Renderer::DrawData Renderer::orderData(Mesh& mesh)
 {
@@ -27,7 +28,12 @@ void Renderer::cleanupData(DrawData data)
 	if (data.indices) { free(data.indices); }
 }
 
-int Renderer::DrawMesh(Mesh& mesh, Shader shader)
+
+// pirms to sito atkomente un izdzes manu implementacije
+// 1) tev tad vajag ari mesh izdzest mainigos dazus un UploadToGpu funkciju un ari Transform funckciju GetMatrix
+// 2) es palasiju ka sis kods ir diezgan neefektivs un katru reizi sito setapot ir diezgan loti leni
+
+/*int Renderer::DrawMesh(Mesh& mesh, Shader shader)
 {
 	int ret_val = 0;
 
@@ -87,7 +93,41 @@ int Renderer::DrawMesh(Mesh& mesh, Shader shader)
 close:
 	cleanupData(data);
 	return ret_val;
+}*/
+
+int Renderer::DrawMesh(Mesh& mesh, Shader shader)
+{
+	if (!mesh.uploaded)
+	{
+		mesh.UploadToGPU();
+	}
+
+	if (!shader.GetID())
+	{
+		printf("No shader to use!\n");
+		return 1;
+	}
+
+	shader.Use();
+
+	unsigned int modelLoc = glGetUniformLocation(shader.GetID(), "model");
+	//unsigned int viewLoc = glGetUniformLocation(shader.GetID(), "view");
+	//unsigned int projLoc = glGetUniformLocation(shader.GetID(), "projection");
+
+	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(mesh.transform.GetMatrix()));
+	//glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(viewMatrix));
+	//glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projectionMatrix));
+
+
+	glBindVertexArray(mesh.VAO);
+	glDrawElements(GL_TRIANGLES, mesh.faceCount * 3, GL_UNSIGNED_INT, 0);
+	glBindVertexArray(0);
+
+	return 0;
 }
+
+
+
 
 void Renderer::Clear(glm::vec4 colour)
 {

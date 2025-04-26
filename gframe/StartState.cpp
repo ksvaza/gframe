@@ -49,6 +49,7 @@ void StartState::Init()
 	//Mesh::Modify::Append(testMesh, rectMesh);
 	Mesh::Modify::Append(testMesh, lineMesh);
 
+	testMesh.transform.scale = glm::vec3(1.0);
 	//Mesh::Construct::Circle(testMesh, glm::vec2(0.0), 0.5, 2000);
 	testMesh.Print();
 
@@ -61,6 +62,24 @@ void StartState::Init()
 
 void StartState::HandleInput()
 {
+	if (Input.Key(GLFW_KEY_W))
+	{
+		testMesh.transform.position.y += 0.01;
+	}
+	if (Input.Key(GLFW_KEY_S))
+	{
+		testMesh.transform.position.y -= 0.01;
+	}
+	if (Input.Key(GLFW_KEY_A))
+	{
+		testMesh.transform.position.x -= 0.01;
+	}
+	if (Input.Key(GLFW_KEY_D))
+	{
+		testMesh.transform.position.x += 0.01;
+	}
+
+
 	if (Input.KeyDown(GLFW_KEY_E))
 	{
 		printf("Key Down 'E'\n");
@@ -84,7 +103,8 @@ void StartState::HandleInput()
 
 void StartState::Update(float dt)
 {
-
+	//testMesh.transform.position.x += 0;
+	//std::cout << testMesh.transform.position.x << ' ';
 }
 
 void StartState::Draw(float dt)

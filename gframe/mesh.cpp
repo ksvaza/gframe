@@ -1,6 +1,11 @@
 #include "mesh.hpp"
 #define _USE_MATH_DEFINES
 #include <math.h>
+#include <glad/glad.h>
+#include <GLFW/glfw3.h>
+#include "mesh.hpp"
+#include "shader.hpp"
+#include <vector>
 
 Mesh::Mesh()
 {
@@ -12,6 +17,46 @@ Mesh::Mesh()
     textureRefCount = 0;
     colour = glm::vec4(1.0);
 }
+
+void Mesh::UploadToGPU()
+{
+    if (uploaded) return;
+
+    glGenVertexArrays(1, &VAO);
+    glGenBuffers(1, &VBO);
+    glGenBuffers(1, &EBO);
+
+    glBindVertexArray(VAO);
+
+    glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBufferData(GL_ARRAY_BUFFER, vertexCount * sizeof(Vertex), vertices, GL_STATIC_DRAW);
+
+    std::vector<unsigned int> indices;
+    for (int i = 0; i < faceCount; i++)
+    {
+        indices.push_back(faces[i].index[0]);
+        indices.push_back(faces[i].index[1]);
+        indices.push_back(faces[i].index[2]);
+    }
+
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), indices.data(), GL_STATIC_DRAW);
+
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
+    glEnableVertexAttribArray(0);
+
+    glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(3 * sizeof(float)));
+    glEnableVertexAttribArray(1);
+
+    glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(7 * sizeof(float)));
+    glEnableVertexAttribArray(2);
+
+    glBindVertexArray(0);
+
+    uploaded = true;
+}
+
+
 
 int Mesh::Create(int vertexCount, int faceCount)
 {
@@ -118,7 +163,7 @@ std::string Mesh::sPrint()
         "Transform:\n"
         "{\n\tPosition: (" + std::to_string(transform.position.x) + ", " + std::to_string(transform.position.y) + ", " + std::to_string(transform.position.z) + ")\n"
         "\tRotation: (" + std::to_string(transform.rotation.x) + ", " + std::to_string(transform.rotation.y) + ", " + std::to_string(transform.rotation.z) + ")\n"
-        "\tRotation: (" + std::to_string(transform.scale.x) + ", " + std::to_string(transform.scale.y) + ", " + std::to_string(transform.scale.z) + ")\n}\n"
+        "\tScale: (" + std::to_string(transform.scale.x) + ", " + std::to_string(transform.scale.y) + ", " + std::to_string(transform.scale.z) + ")\n}\n"
         "Mesh vertices: " + std::to_string(vertexCount) + "\n";
 
     for (int i = 0; i < vertexCount; i++)
