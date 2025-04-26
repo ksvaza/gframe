@@ -2,9 +2,29 @@
 #include "StartState.hpp"
 #define _USE_MATH_DEFINES
 #include <math.h>
+#include "texture.hpp"
 
 void StartState::Init()
 {
+	_data->AssetManager.LoadTexture("check", "C:/Users/jekabins/Downloads/test.png");
+	//_data->AssetManager.UnloadTexture("check");
+
+	Pixel3* pixels = _data->AssetManager.GetTexture("check").data.ch3;
+	std::cout << _data->AssetManager.GetTexture("check").nrChannels << '\n' << '\n';
+	for (int i = 0; i < _data->AssetManager.GetTexture("check").width * _data->AssetManager.GetTexture("check").height;i++)
+	{
+		/*std::cout << "Pixel " << i << ": "
+			<< +pixels[i].r << ", "
+			<< +pixels[i].g << ", "
+			<< +pixels[i].b << ", "
+			<< +pixels[i].a << "\n";*/
+		std::cout << "Pixel " << i << ": "
+			<< +pixels[i].r << ", "
+			<< +pixels[i].g << ", "
+			<< +pixels[i].b << "\n";
+	}
+
+
 	//testMesh.Create(3, 1);
 	//testMesh.vertices[0] = Vertex{ -0.5, -0.5, 0.0, 1.0, (float)0.8431372549, 0.0, 1.0, 0.0, 0.0 };
 	//testMesh.vertices[1] = Vertex{  0.5, -0.5, 0.0, 1.0, (float)0.8431372549, 0.0, 1.0, 0.0, 0.0 };
