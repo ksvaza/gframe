@@ -3,6 +3,7 @@
 #define _USE_MATH_DEFINES
 #include <math.h>
 #include "texture.hpp"
+#include <glm/gtc/matrix_transform.hpp>
 
 void StartState::Init()
 {
@@ -81,6 +82,14 @@ void StartState::HandleInput()
 	{
 		testMesh.transform.position.x += 0.01;
 	}
+	if (Input.Key(GLFW_KEY_SPACE))
+	{
+		testMesh.transform.position.z += 1;
+	}
+	if (Input.Key(GLFW_KEY_LEFT_SHIFT))
+	{
+		testMesh.transform.position.z -= 1;
+	}
 
 
 	if (Input.KeyDown(GLFW_KEY_E))
@@ -112,8 +121,23 @@ void StartState::Update(float dt)
 
 void StartState::Draw(float dt)
 {
+	glm::mat4 viewMatrix = glm::lookAt(
+		glm::vec3(0.0f, 0.0f, 3.0f),
+		glm::vec3(0.0f, 0.0f, 0.0f),
+		glm::vec3(0.0f, 1.0f, 0.0f)
+	);
+
+	float aspectRatio = (float)_data->window.width / (float)_data->window.height;
+	glm::mat4 projectionMatrix = glm::perspective(
+		glm::radians(80.0f),
+		aspectRatio,
+		0.1f,
+		100.0f
+	);
+
+
 	Render.Clear(glm::vec4(0.8, 0.0, 0.0, 1.0));
-	Render.DrawMesh(testMesh, testShader);
+	Render.DrawMesh(testMesh, testShader, viewMatrix, projectionMatrix);
 }
 
 void StartState::Pause()

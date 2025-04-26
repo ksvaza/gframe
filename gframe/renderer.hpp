@@ -17,6 +17,6 @@ private:
 	DrawData orderData(Mesh& mesh);
 	void cleanupData(DrawData data);
 public:
-	int DrawMesh(Mesh& mesh, Shader shader);
+	int DrawMesh(Mesh& mesh, Shader shader, glm::mat4 viewMatrix, glm::mat4 projectionMatrix);
 	void Clear(glm::vec4 colour);
 };
