@@ -11,12 +11,13 @@ void StartState::Init()
 	pitch = 0;
 	CameraPos = glm::vec3(0.0f, 0.0f, 30.0f);
 
-	_data->AssetManager.LoadTexture("check", "C:/Users/jekabins/Downloads/test.png");
-	_data->AssetManager.LoadMeshFromOBJ("testmesh", "../assets/Cube.obj");
+	_data->AssetManager.LoadAllMeshesFromFolder("../StartState");
+	//_data->AssetManager.LoadTexture("check", "C:/Users/jekabins/Downloads/test.png");
+	//_data->AssetManager.LoadMeshFromOBJ("cube", "../assets/tinker.obj");
 	Pixel3* pixels = _data->AssetManager.GetTexture("check").data.ch3;
 
-	testMesh2 = _data->AssetManager.GetMesh("testmesh");
-
+	testMesh2 = _data->AssetManager.GetMesh("cube");
+	std::cout << testMesh2;
 
 	Mesh circleMesh, rectMesh, lineMesh;
 

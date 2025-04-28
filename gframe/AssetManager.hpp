@@ -31,14 +31,16 @@ public:
 	//void UnloadSound();
 
 
-	int8_t LoadMeshFromOBJ(std::string_view name, std::string_view FileName);
-	Mesh& GetMesh(std::string_view name);
-	int8_t UnloadMesh(std::string_view name);
+	int8_t LoadMeshFromOBJ(std::string name, std::string FileName);
+	Mesh& GetMesh(std::string name);
+	int8_t UnloadMesh(std::string name);
+
+	void LoadAllMeshesFromFolder(std::string folderPath);
 
 
 private:
 	std::map <std::string_view, Texture> _textures;
-	std::map <std::string_view, Mesh> _meshes;
+	std::map <std::string, Mesh> _meshes;
 	//std::map <std::string, sf::Font> _fonts;
 	//std::map <std::string, sf::SoundBuffer> _sounds;
 };

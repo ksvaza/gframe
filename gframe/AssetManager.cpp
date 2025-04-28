@@ -1,8 +1,12 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include "AssetManager.hpp"
 #include "stb_image.h"
+#include <filesystem>
 #include <iostream>
+#include <stdio.h>
 #include <glad/glad.h>
+
+namespace fs = std::filesystem;
 
 int8_t  AssetManager::LoadTexture(std::string_view name, std::string_view FileName)
 {
@@ -44,8 +48,9 @@ int8_t AssetManager::UnloadTexture(std::string_view name)
 	return -1;
 }
 
-int8_t AssetManager::LoadMeshFromOBJ(std::string_view name, std::string_view fileName)
+int8_t AssetManager::LoadMeshFromOBJ(std::string name, std::string fileName)
 {
+    
     Mesh mesh;
     std::vector<Vertex> tempVertices;
     std::vector<Face> tempFaces;
@@ -58,7 +63,7 @@ int8_t AssetManager::LoadMeshFromOBJ(std::string_view name, std::string_view fil
         return -1;
     }
 
-    std::vector<glm::vec3> positions(1, glm::vec3(0.0f)); // Dummy at index 0
+    std::vector<glm::vec3> positions(1, glm::vec3(0.0f));
     std::vector<glm::vec2> uvs(1, glm::vec2(0.0f));
     std::vector<glm::vec3> normals(1, glm::vec3(0.0f));
 
@@ -150,10 +155,10 @@ int8_t AssetManager::LoadMeshFromOBJ(std::string_view name, std::string_view fil
 
     mesh.Create(static_cast<int>(tempVertices.size()), static_cast<int>(tempFaces.size()));
 
-    for (int i = 0; i < mesh.vertexCount; ++i)
+    for (int i = 0; i < mesh.vertexCount; i++)
         mesh.vertices[i] = tempVertices[i];
 
-    for (int i = 0; i < mesh.faceCount; ++i)
+    for (int i = 0; i < mesh.faceCount; i++)
         mesh.faces[i] = tempFaces[i];
 
     mesh.textureRefCount = static_cast<int>(tempTextureRefs.size());
@@ -163,12 +168,15 @@ int8_t AssetManager::LoadMeshFromOBJ(std::string_view name, std::string_view fil
         for (int i = 0; i < mesh.textureRefCount; ++i)
             mesh.textureReferences[i] = tempTextureRefs[i];
     }
-
+    //std::cout << mesh;
+    //std::cout << name << '|' << '\n';
+    
     _meshes[name] = mesh;
+    GetMesh("cube");
     //_meshes.emplace(name, std::move(mesh));
     return 0;
 }
-Mesh& AssetManager::GetMesh(std::string_view name)
+Mesh& AssetManager::GetMesh(std::string name)
 {
     static Mesh ErrorMesh; // Kaut kads error mesh
     auto it = _meshes.find(name);
@@ -176,9 +184,10 @@ Mesh& AssetManager::GetMesh(std::string_view name)
     {
         return it->second;
     }
+    std::cout << "mesh: " << name << " does not exist!!\n";
     return ErrorMesh;
 }
-int8_t AssetManager::UnloadMesh(std::string_view name)
+int8_t AssetManager::UnloadMesh(std::string name)
 {
     auto it = _meshes.find(name);
     if (it != _meshes.end())
@@ -197,6 +206,53 @@ int8_t AssetManager::UnloadMesh(std::string_view name)
     }
 
     return -1; 
+}
+
+
+
+void AssetManager::LoadAllMeshesFromFolder(std::string folderPath)
+{
+    namespace fs = std::filesystem;
+    if (!fs::exists(folderPath))
+    {
+        std::cout << "Folder does not exist: " << folderPath << '\n';
+        return;
+    }
+
+    if (!fs::is_directory(folderPath))
+    {
+        std::cout << "Path is not a directory: " << folderPath << '\n';
+        return;
+    }
+
+    for (const auto& entry : fs::directory_iterator(folderPath))
+    {
+        if (entry.is_regular_file())
+        {
+            const fs::path& filePath = entry.path();
+            if (filePath.extension() == ".obj")
+            {
+                std::string fileName = filePath.filename().string();
+                std::string fullPath = filePath.string();
+                std::replace(fullPath.begin(), fullPath.end(), '\\', '/');
+
+                std::string meshName = filePath.stem().string();
+
+                if (LoadMeshFromOBJ(meshName, fullPath) != 0)
+                {
+                    std::cout << "Failed to load mesh: " << fullPath << "\n";
+                }
+                else
+                {
+                    std::cout << "Successfully loaded: " << fullPath << "\n";
+                    
+                }
+                
+            }
+            GetMesh("cube");
+        }
+    }
+    GetMesh("cube");
 }
 
 
