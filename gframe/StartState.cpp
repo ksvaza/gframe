@@ -57,12 +57,17 @@ void StartState::Init()
 	testShader.Read("fragment.glsl", GL_FRAGMENT_SHADER);
 	testShader.Compile();
 
+	batch.AddMesh(circleMesh);
+	batch.AddMesh(rectMesh);
+	batch.AddMesh(lineMesh);
+
+	batch.OrderAndMapData();
+
 	printf("Start State initialised!\n");
 }
 
 void StartState::HandleInput()
 {
-	if (Input.Key(GLFW_KEY_W))
 	{
 		testMesh.transform.position.y += 0.01;
 	}
@@ -99,6 +104,11 @@ void StartState::HandleInput()
 	{
 		printf("Down\n");
 	}
+
+	if (Input.ButtonDown(GLFW_MOUSE_BUTTON_LEFT))
+	{
+		printf("Spawn\n");
+	}
 }
 
 void StartState::Update(float dt)
@@ -109,8 +119,11 @@ void StartState::Update(float dt)
 
 void StartState::Draw(float dt)
 {
+	printf("Draw\n");
 	Render.Clear(glm::vec4(0.8, 0.0, 0.0, 1.0));
-	Render.DrawMesh(testMesh, testShader);
+	//Render.DrawMesh(testMesh, testShader);
+	batch.Draw(testShader);
+	printf("Done \n");
 }
 
 void StartState::Pause()
