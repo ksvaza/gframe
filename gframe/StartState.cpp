@@ -2,9 +2,29 @@
 #include "StartState.hpp"
 #define _USE_MATH_DEFINES
 #include <math.h>
+#include "texture.hpp"
 
 void StartState::Init()
 {
+	_data->AssetManager.LoadTexture("check", "C:/Users/jekabins/Downloads/test.png");
+	//_data->AssetManager.UnloadTexture("check");
+
+	Pixel3* pixels = _data->AssetManager.GetTexture("check").data.ch3;
+	std::cout << _data->AssetManager.GetTexture("check").nrChannels << '\n' << '\n';
+	//for (int i = 0; i < _data->AssetManager.GetTexture("check").width * _data->AssetManager.GetTexture("check").height;i++)
+	//{
+	//	/*std::cout << "Pixel " << i << ": "
+	//		<< +pixels[i].r << ", "
+	//		<< +pixels[i].g << ", "
+	//		<< +pixels[i].b << ", "
+	//		<< +pixels[i].a << "\n";*/
+	//	std::cout << "Pixel " << i << ": "
+	//		<< +pixels[i].r << ", "
+	//		<< +pixels[i].g << ", "
+	//		<< +pixels[i].b << "\n";
+	//}
+
+
 	//testMesh.Create(3, 1);
 	//testMesh.vertices[0] = Vertex{ -0.5, -0.5, 0.0, 1.0, (float)0.8431372549, 0.0, 1.0, 0.0, 0.0 };
 	//testMesh.vertices[1] = Vertex{  0.5, -0.5, 0.0, 1.0, (float)0.8431372549, 0.0, 1.0, 0.0, 0.0 };
@@ -29,6 +49,7 @@ void StartState::Init()
 	//Mesh::Modify::Append(testMesh, rectMesh);
 	Mesh::Modify::Append(testMesh, lineMesh);
 
+	testMesh.transform.scale = glm::vec3(1.0);
 	//Mesh::Construct::Circle(testMesh, glm::vec2(0.0), 0.5, 2000);
 	testMesh.Print();
 
@@ -47,7 +68,23 @@ void StartState::Init()
 
 void StartState::HandleInput()
 {
-	printf("Inpt\n");
+	{
+		testMesh.transform.position.y += 0.01;
+	}
+	if (Input.Key(GLFW_KEY_S))
+	{
+		testMesh.transform.position.y -= 0.01;
+	}
+	if (Input.Key(GLFW_KEY_A))
+	{
+		testMesh.transform.position.x -= 0.01;
+	}
+	if (Input.Key(GLFW_KEY_D))
+	{
+		testMesh.transform.position.x += 0.01;
+	}
+
+
 	if (Input.KeyDown(GLFW_KEY_E))
 	{
 		printf("Key Down 'E'\n");
@@ -76,7 +113,8 @@ void StartState::HandleInput()
 
 void StartState::Update(float dt)
 {
-
+	//testMesh.transform.position.x += 0;
+	//std::cout << testMesh.transform.position.x << ' ';
 }
 
 void StartState::Draw(float dt)
