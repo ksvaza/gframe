@@ -29,6 +29,8 @@ struct TextureRef
 class Mesh
 {
 public:
+	bool changed = false;
+
 	Vertex* vertices = NULL;
 	int vertexCount = 0;
 
