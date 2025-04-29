@@ -1,4 +1,6 @@
 #include "renderer.hpp"
+#include <glm/gtc/type_ptr.hpp>
+
 
 void Renderer::MeshSnapshot::Capture(Mesh& mesh)
 {
