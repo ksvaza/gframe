@@ -31,7 +31,6 @@ void StartState::Init()
 	//testMesh.vertices[2] = Vertex{  0.0,  0.5, 0.0, 1.0, (float)0.8431372549, 0.0, 1.0, 0.0, 0.0 };
 	//testMesh.faces[0] = Face{ 0, 1, 2, glm::vec3(0.0), -1 };
 
-	Mesh circleMesh, rectMesh, lineMesh;
 
 	Mesh::Construct::RegularPolygon(circleMesh, glm::vec3(0.0), 0.0, 0.6, 90);
 	Mesh::Modify::Colour(circleMesh, glm::vec4(1.0, (float)0.8431372549, 0.0, 1.0));
@@ -46,7 +45,7 @@ void StartState::Init()
 	Mesh::Bake::RectanglesC(lineMesh);
 
 	Mesh::Modify::Append(testMesh, circleMesh);
-	//Mesh::Modify::Append(testMesh, rectMesh);
+	Mesh::Modify::Append(testMesh, rectMesh);
 	Mesh::Modify::Append(testMesh, lineMesh);
 
 	testMesh.transform.scale = glm::vec3(1.0);
@@ -57,17 +56,21 @@ void StartState::Init()
 	testShader.Read("fragment.glsl", GL_FRAGMENT_SHADER);
 	testShader.Compile();
 
+	printf("Batch startup\n");
+
+	batch = Renderer::Batch();
 	batch.AddMesh(circleMesh);
 	batch.AddMesh(rectMesh);
 	batch.AddMesh(lineMesh);
 
-	batch.OrderAndMapData();
+	//batch.OrderAndMapData();
 
 	printf("Start State initialised!\n");
 }
 
 void StartState::HandleInput()
 {
+	if (Input.Key(GLFW_KEY_W))
 	{
 		testMesh.transform.position.y += 0.01;
 	}
@@ -119,9 +122,9 @@ void StartState::Update(float dt)
 
 void StartState::Draw(float dt)
 {
-	printf("Draw\n");
 	Render.Clear(glm::vec4(0.8, 0.0, 0.0, 1.0));
 	//Render.DrawMesh(testMesh, testShader);
+	printf("Draw\n");
 	batch.Draw(testShader);
 	printf("Done \n");
 }

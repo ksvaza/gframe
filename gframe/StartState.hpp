@@ -27,5 +27,6 @@ private:
 	Renderer::Batch batch = Renderer::Batch();
 
 	Shader testShader;
-	Mesh testMesh;
+	Mesh testMesh = Mesh();
+	Mesh circleMesh = Mesh(), rectMesh = Mesh(), lineMesh = Mesh();
 };

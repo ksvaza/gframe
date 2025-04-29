@@ -1,6 +1,6 @@
 #include "renderer.hpp"
 #include <glm/gtc/type_ptr.hpp>
-
+#include <thread>
 
 void Renderer::MeshSnapshot::Capture(Mesh& mesh)
 {
@@ -106,7 +106,8 @@ int Renderer::Batch::OrderAndMapData()
 	int ofs = 0;
 	for (int i = 0; i < meshCount; i++)
 	{
-		memcpy(vPtr + ofs, meshes[i]->vertices, meshes[i]->vertexCount * sizeof(Vertex));
+		if (!meshes[i]->vertices) { continue; }
+		memcpy(vPtr + ofs, meshes[i]->vertices, meshes[i]->vertexCount/* * sizeof(Vertex)*/);
 		ofs += meshes[i]->vertexCount;
 	}
 	glUnmapBuffer(GL_ARRAY_BUFFER);
@@ -151,6 +152,7 @@ void Renderer::Batch::FreeData()
 
 int Renderer::Batch::UpdateData()
 {
+	printf("UpdateData\n");
 	bool changes = false;
 	for (int i = 0; i < meshCount; i++)
 	{
@@ -159,18 +161,21 @@ int Renderer::Batch::UpdateData()
 			changes = true;
 			meshes[i]->changed = false;
 			meshSnapshots[i].Capture(*meshes[i]);
+			printf("Capture %d, ", i);
 		}
 	}
+	printf("%cUpdateData1\n", changes ? '\n' : ' ');
 	if (changes)
 	{
 		OrderAndMapData();
 	}
+	printf("UpdateData2\n");
 	return 0;
 }
 
 int Renderer::Batch::Draw(Shader shader)
 {
-	//UpdateData();
+	UpdateData();
 	printf("BDraw 1\n");
 	shader.Use();
 
