@@ -9,6 +9,7 @@
 #include <iostream>
 #include <memory>
 #include <string>
+//#include "ArchetypeRegistry.hpp"
 
 
 struct GframeData
@@ -19,6 +20,7 @@ struct GframeData
 	InputManager Input;
 	AssetManager AssetManager;
 	Tools tools;
+	//ArchetypeRegistry ArchetypeRegistry;
 };
 
 typedef std::shared_ptr<GframeData> GframeDataRef;

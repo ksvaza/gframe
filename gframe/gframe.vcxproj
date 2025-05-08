@@ -135,13 +135,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Archetype.cpp" />
+    <ClCompile Include="ECS.cpp" />
     <ClCompile Include="AssetManager.cpp" />
     <ClCompile Include="AssetManager.hpp" />
+    <ClCompile Include="BaseComponent.cpp" />
     <ClCompile Include="gframe.cpp" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mesh.cpp" />
+    <ClCompile Include="Position.hpp" />
     <ClCompile Include="renderer.cpp" />
     <ClCompile Include="shader.cpp" />
     <ClCompile Include="StartState.cpp" />
@@ -153,8 +157,12 @@
     <ClCompile Include="Tools.hpp" />
     <ClCompile Include="transform.cpp" />
     <ClCompile Include="Window.cpp" />
+    <ClCompile Include="World.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Archetype.hpp" />
+    <ClInclude Include="ECS.hpp" />
+    <ClInclude Include="BaseComponent.hpp" />
     <ClInclude Include="gframe.hpp" />
     <ClInclude Include="InputManager.hpp" />
     <ClInclude Include="mesh.hpp" />
@@ -164,7 +172,9 @@
     <ClInclude Include="State.hpp" />
     <ClInclude Include="stb_image.h" />
     <ClInclude Include="transform.hpp" />
+    <ClInclude Include="Velocity.hpp" />
     <ClInclude Include="Window.hpp" />
+    <ClInclude Include="World.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="fragment.glsl" />

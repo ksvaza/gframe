@@ -28,6 +28,15 @@
     <Filter Include="Source Files\engine\shaders">
       <UniqueIdentifier>{948905af-c6c5-4735-95a4-0c1e7026ea79}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\engine\ECS">
+      <UniqueIdentifier>{c8f16766-516e-4fe1-be31-097dc803ae2c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\engine\ECS">
+      <UniqueIdentifier>{4838b138-b627-483d-bd0d-c8e67104fb6f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\engine\ECS\Components">
+      <UniqueIdentifier>{9723238f-9cd8-4af1-a70e-631b5cb9d981}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -84,6 +93,21 @@
     <ClCompile Include="glad.c">
       <Filter>Source Files\engine</Filter>
     </ClCompile>
+    <ClCompile Include="Archetype.cpp">
+      <Filter>Source Files\engine\ECS</Filter>
+    </ClCompile>
+    <ClCompile Include="World.cpp">
+      <Filter>Source Files\engine\ECS</Filter>
+    </ClCompile>
+    <ClCompile Include="Position.hpp">
+      <Filter>Header Files\engine\ECS\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="ECS.cpp">
+      <Filter>Source Files\engine\ECS</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseComponent.cpp">
+      <Filter>Source Files\engine\ECS</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="State.hpp">
@@ -115,6 +139,21 @@
     </ClInclude>
     <ClInclude Include="StartState.hpp">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="World.hpp">
+      <Filter>Header Files\engine\ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="Archetype.hpp">
+      <Filter>Header Files\engine\ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="ECS.hpp">
+      <Filter>Header Files\engine\ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="Velocity.hpp">
+      <Filter>Header Files\engine\ECS\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseComponent.hpp">
+      <Filter>Header Files\engine\ECS\Components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

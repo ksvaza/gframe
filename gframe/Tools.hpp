@@ -5,5 +5,4 @@ class Tools
 public:
 	Tools() {};
 	~Tools() {};
-
 };
