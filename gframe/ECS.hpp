@@ -1,60 +1,96 @@
 #pragma once
-#include <set>
+#include <unordered_map>
+#include <vector>
+#include <typeindex>
 #include "Archetype.hpp"
 
-class ECS
+namespace EECS
 {
-public:
-	EntityId CreateEntity()
+	using EntityId = uint32_t;
+
+	class ECS
 	{
-		return EntityId;
-		EntityId++;
-	}
-	template<typename T>
-	void AttachComponent(EntityId entity)
-	{
-		if (entityMasks[entity][ComponentType::getId(std::type_index(typeid(T)))])
+	public:
+		ECS() : nextEntityId(1) {}
+
+		EntityId CreateEntity()
 		{
-			return;
+			return nextEntityId++;
 		}
-		ComponentMask mask = CreateMask<T>;
-		Archetype* arch = FindExactMatch(entityMasks[entity]);
-		arch->RemoveEntity(entity);
-		entityMasks[entity].set(ComponentType::getId(std::type_index(typeid(T))));
-		AddArchetype///da blin
-	}
-private:
-	std::vector<Archetype<>> FindPartialMatch(ComponentMask mask)
-	{
-		std::vector<Archetype<>> vec;
-		for (const auto& x : ArchetypePool)
+
+		void AttachComponent(EntityId entity)
 		{
-			if ((x.second.mask & mask) == mask)
+			auto it = entityMasks.find(entity);
+			if (it != entityMasks.end())
 			{
-				vec.push_back(x.second);
+				if (it->second[ComponentType::getId(std::type_index(typeid(Position)))])
+				{
+					return; // Component already attached
+				}
+
+				// Find current archetype
+				Archetype<Position>* current = FindExactMatch(it->second);
+				if (current)
+					current->RemoveEntity(entity);
+
+				// Update mask with Position component
+				it->second.set(ComponentType::getId(std::type_index(typeid(Position))));
+
+				// Find or create new archetype
+				Archetype<Position>* newArch = FindExactMatch(it->second);
+				if (!newArch)
+				{
+					AddArchetype<Position>();
+					newArch = FindExactMatch(it->second);
+				}
+
+				if (newArch)
+					newArch->AddEntity(entity);
 			}
 		}
-		return vec;
-	}
-	Archetype<>* FindExactMatch(ComponentMask mask)
-	{
-		auto it = ArchetypePool.find(mask);
-		if (it != ArchetypePool.end()) {
-			return &it->second;
-		}
-		return nullptr;;
-	}
-	template<typename ...T>
-	void AddArchetype()
-	{
-		ComponentMask mask = CreateMask<...T>();
-		auto it = ArchetypePool.find(mask);
-		if (it != ArchetypePool.end())
+
+	private:
+		std::vector<Archetype<Position>*> FindPartialMatch(const ComponentMask& mask)
 		{
-			ArchetypePool[mask] = Archetype<...T>();
+			std::vector<Archetype<Position>*> vec;
+			for (auto& x : ArchetypePool)
+			{
+				if ((x.first & mask) == mask)
+				{
+					vec.push_back(&x.second);
+				}
+			}
+			return vec;
 		}
+
+		Archetype<Position>* FindExactMatch(const ComponentMask& mask)
+		{
+			auto it = ArchetypePool.find(mask);
+			if (it != ArchetypePool.end()) {
+				return &it->second;
+			}
+			return nullptr;
+		}
+
+		template<typename... T>
+		void AddArchetype()
+		{
+			ComponentMask mask = CreateMask<T...>();
+			if (ArchetypePool.find(mask) == ArchetypePool.end())
+			{
+				ArchetypePool.emplace(mask, Archetype<T...>());
+			}
+		}
+
+		std::unordered_map<ComponentMask, Archetype<Position>> ArchetypePool;
+		EntityId nextEntityId;
+		std::unordered_map<EntityId, ComponentMask> entityMasks;
+	};
+
+	static void test()
+	{
+		ECS ecs;
+		EntityId entity = ecs.CreateEntity();
+		ecs.AttachComponent(entity);
 	}
-	std::unordered_map<ComponentMask, Archetype<>> ArchetypePool;
-	EntityId EntityId;
-	std::unordered_map<EntityId, ComponentMask> entityMasks;
-};
+}

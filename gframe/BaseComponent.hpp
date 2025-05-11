@@ -2,35 +2,39 @@
 #include <unordered_map>
 #include <typeindex>
 
-static class ComponentType
+
+namespace EECS
 {
-	static std::unordered_map<std::type_index, std::uint64_t> ComponentIdMap;
-	static std::uint64_t ComponentIdCounter;
-public:
-	static std::uint64_t getId(std::type_index type)
+	static class ComponentType
 	{
-		auto it = ComponentIdMap.find(type);
-		
-		if (it != ComponentIdMap.end())
+		static std::unordered_map<std::type_index, std::uint32_t> ComponentIdMap;
+		static std::uint32_t ComponentIdCounter;
+	public:
+		static std::uint32_t getId(std::type_index type)
 		{
+			auto it = ComponentIdMap.find(type);
+
+			if (it != ComponentIdMap.end())
+			{
+				return ComponentIdMap[type];
+			}
+			ComponentIdMap[type] = ComponentIdCounter;
+			ComponentIdCounter++;
 			return ComponentIdMap[type];
 		}
-		ComponentIdMap[type] = ComponentIdCounter;
-		ComponentIdCounter++;
-		return ComponentIdMap[type];
-	}
-	static void reset()
+		static void reset()
+		{
+			ComponentIdMap.clear();
+			ComponentIdCounter = 0;
+		}
+	};
+
+
+
+
+	class BaseComponent
 	{
-		ComponentIdMap.clear();
-		ComponentIdCounter = 0;
-	}
-};
-
-
-
-
-class BaseComponent
-{
-public:
-	virtual ~BaseComponent();
-};
+	public:
+		virtual ~BaseComponent();
+	};
+}

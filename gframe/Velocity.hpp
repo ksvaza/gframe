@@ -1,7 +1,11 @@
 #pragma once
 #include "BaseComponent.hpp"
 
-struct Velocity : BaseComponent
+
+namespace EECS
 {
-	float x, y, z;
-};
+	struct Velocity : BaseComponent
+	{
+		float x, y, z;
+	};
+}

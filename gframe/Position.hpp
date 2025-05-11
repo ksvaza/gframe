@@ -1,7 +1,10 @@
 #pragma once
 #include "BaseComponent.hpp"
-
-struct Position : BaseComponent
+namespace EECS
 {
-	float x, y, z;
-};
+	struct Position : BaseComponent
+	{
+		float x, y, z;
+	};
+}
+	

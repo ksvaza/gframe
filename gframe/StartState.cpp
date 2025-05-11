@@ -6,6 +6,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include "Archetype.hpp"
 #include "BaseComponent.hpp"
+#include "ECS.hpp"
 
 void StartState::Init()
 {
@@ -126,7 +127,7 @@ void StartState::HandleInput()
 
 void StartState::Update(float dt)
 {
-
+	EECS::test();
 }
 
 void StartState::Draw(float dt)
