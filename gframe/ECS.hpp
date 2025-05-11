@@ -4,9 +4,9 @@
 #include <typeindex>
 #include "Archetype.hpp"
 
-namespace EECS
+namespace ECS
 {
-	using EntityId = uint32_t;
+	/*using EntityId = uint32_t;
 
 	class ECS
 	{
@@ -92,5 +92,5 @@ namespace EECS
 		ECS ecs;
 		EntityId entity = ecs.CreateEntity();
 		ecs.AttachComponent(entity);
-	}
+	}*/
 }

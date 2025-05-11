@@ -3,7 +3,7 @@
 #include <typeindex>
 
 
-namespace EECS
+namespace ECS
 {
 	static class ComponentType
 	{
@@ -35,6 +35,6 @@ namespace EECS
 	class BaseComponent
 	{
 	public:
-		virtual ~BaseComponent();
+		virtual ~BaseComponent() {};
 	};
 }
