@@ -6,8 +6,7 @@
 
 namespace ECS
 {
-	/*using EntityId = uint32_t;
-
+	/*
 	class ECS
 	{
 	public:

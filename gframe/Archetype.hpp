@@ -93,6 +93,7 @@ namespace ECS
 		std::vector<Entity> entities;
 		size_t entityCount = 0;
 	public:
+		
 		template<typename ...T>
 		void Init()
 		{
