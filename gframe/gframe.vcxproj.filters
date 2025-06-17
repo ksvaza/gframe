@@ -117,6 +117,12 @@
     <ClCompile Include="Velocity.hpp">
       <Filter>Header Files\engine\ECS\Components</Filter>
     </ClCompile>
+    <ClCompile Include="InputTag.hpp">
+      <Filter>Header Files\engine\ECS\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="MovementSystem.hpp">
+      <Filter>Header Files\engine\ECS\Systems</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="mesh.hpp">
@@ -163,6 +169,9 @@
     </ClInclude>
     <ClInclude Include="Movement.hpp">
       <Filter>Header Files\engine\ECS\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="Orientation.hpp">
+      <Filter>Header Files\engine\ECS\Components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

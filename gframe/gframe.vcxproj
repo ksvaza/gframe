@@ -144,8 +144,10 @@
     <ClCompile Include="gframe.cpp" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="InputManager.cpp" />
+    <ClCompile Include="InputTag.hpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mesh.cpp" />
+    <ClCompile Include="MovementSystem.hpp" />
     <ClCompile Include="renderer.cpp" />
     <ClCompile Include="shader.cpp" />
     <ClCompile Include="StartState.cpp" />
@@ -161,6 +163,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Archetype.hpp" />
+    <ClInclude Include="Orientation.hpp" />
     <ClInclude Include="ecs.hpp" />
     <ClInclude Include="gframe.hpp" />
     <ClInclude Include="InputManager.hpp" />

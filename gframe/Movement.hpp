@@ -3,7 +3,7 @@
 #include "Velocity.hpp"
 #include "Position.hpp"
 
-void UpdateMovement(ECS::ecs& _ecs, float dt)
+inline void UpdateMovement(ECS::ecs& _ecs, float dt)
 {
     auto archetypes = _ecs.FindArchetypesWithMask<Position, Velocity>();
 

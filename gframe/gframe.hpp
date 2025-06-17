@@ -11,6 +11,10 @@
 #include <string>
 #include "ecs.hpp"
 
+struct Player
+{
+
+};
 
 struct GframeData
 {

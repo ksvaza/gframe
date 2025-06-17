@@ -4,9 +4,39 @@
 #include <math.h>
 #include "texture.hpp"
 #include <glm/gtc/matrix_transform.hpp>
-#include "Archetype.hpp"
+#include "Position.hpp"
+#include "Velocity.hpp"
+#include "Orientation.hpp"
+#include "InputTag.hpp"
+#include "MovementSystem.hpp"
+#include "Movement.hpp"
+
+EntityID entity;
+
 void StartState::Init()
 {
+	entity = _data->ecs.CreateEntity();
+	_data->ecs.RegisterComponent<Position>();
+	_data->ecs.RegisterComponent<Velocity>();
+	_data->ecs.RegisterComponent<Orientation>();
+	_data->ecs.RegisterComponent<InputTag>();
+
+	_data->ecs.AddComponent<Position>(entity, Position{ 0.0f, 0.0f, 0.0f });
+	_data->ecs.AddComponent<Velocity>(entity, Velocity{ 0.0f, 0.0f, 0.0f });
+	_data->ecs.AddComponent<Orientation>(entity, Orientation{ 0.0f, 0.0f });
+	_data->ecs.AddComponent<InputTag>(entity, InputTag{});
+
+
+	InputManager::Button(0);
+
+	_data->ecs.RegisterSystem(MovementSystem);
+	_data->ecs.RegisterSystem(UpdateMovement);
+	/*_data->ecs.RegisterSystem([this](ECS::ecs& ecs, float dt) {
+		_data->window.height;
+
+
+		});*/
+
 	yaw = -90.0f;
 	pitch = 0;
 	CameraPos = glm::vec3(0.0f, 0.0f, 30.0f);
@@ -15,7 +45,7 @@ void StartState::Init()
 	Pixel3* pixels = _data->AssetManager.GetTexture("check").data.ch3;
 
 	testMesh2 = _data->AssetManager.GetMesh("cube");
-	std::cout << testMesh2;
+	//std::cout << testMesh2;
 
 	Mesh circleMesh, rectMesh, lineMesh;
 
@@ -48,13 +78,10 @@ void StartState::Init()
 	testShader.Compile();
 
 	printf("Start State initialised!\n");
-
-	//_data->ArchetypeRegistry.getOrCreateArchetype<Position, Velocity>();
 }
 
 void StartState::HandleInput()
 {
-
 	float sensitivity = 0.1f;
 	float speed = 1.0f;
 	if (Input.Button(0))
@@ -122,7 +149,11 @@ void StartState::HandleInput()
 
 void StartState::Update(float dt)
 {
-	//ECS::test();
+	_data->ecs.UpdateSystems(dt);
+	Velocity* vel = _data->ecs.GetComponentForEntity<Velocity>(entity);
+	std::cout << "Velocity: " << vel->vx << ", " << vel->vy << ", " << vel->vz << " | ";
+	Position* pos = _data->ecs.GetComponentForEntity<Position>(entity);
+	std::cout << "Position: " << pos->x << ", " << pos->y << ", " << pos->z << std::endl;
 }
 
 void StartState::Draw(float dt)
@@ -130,6 +161,7 @@ void StartState::Draw(float dt)
 	CameraFront = glm::normalize(glm::vec3(cos(glm::radians(yaw)) * cos(glm::radians(pitch)), 
 		sin(glm::radians(pitch)),
 		sin(glm::radians(yaw)) * cos(glm::radians(pitch))));
+
 	glm::mat4 viewMatrix = glm::lookAt(
 		CameraPos, //camera pos
 		CameraFront + CameraPos, //look at pos !!not look at vector!!
@@ -146,7 +178,6 @@ void StartState::Draw(float dt)
 
 
 	Render.Clear(glm::vec4(0.8, 0.0, 0.0, 1.0));
-	//Render.DrawMesh(testMesh, testShader, viewMatrix, projectionMatrix);
 	Render.DrawMesh(testMesh2, testShader, viewMatrix, projectionMatrix);
 }
 
