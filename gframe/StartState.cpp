@@ -5,8 +5,6 @@
 #include "texture.hpp"
 #include <glm/gtc/matrix_transform.hpp>
 #include "Archetype.hpp"
-#include "BaseComponent.hpp"
-#include "ECS.hpp"
 void StartState::Init()
 {
 	yaw = -90.0f;
@@ -14,8 +12,6 @@ void StartState::Init()
 	CameraPos = glm::vec3(0.0f, 0.0f, 30.0f);
 
 	_data->AssetManager.LoadAllMeshesFromFolder("../StartState");
-	//_data->AssetManager.LoadTexture("check", "C:/Users/jekabins/Downloads/test.png");
-	//_data->AssetManager.LoadMeshFromOBJ("cube", "../assets/tinker.obj");
 	Pixel3* pixels = _data->AssetManager.GetTexture("check").data.ch3;
 
 	testMesh2 = _data->AssetManager.GetMesh("cube");
@@ -126,18 +122,7 @@ void StartState::HandleInput()
 
 void StartState::Update(float dt)
 {
-	//EECS::test();
-	ECS::Archetype arch;
-	arch.Init<ECS::Position, ECS::Velocity>();
-	ECS::Entity entity = 0;
-	arch.addEntity(entity, ECS::Position(1, 1, 1), ECS::Velocity(1, 2, 2));
-	for (size_t i = 0; i < arch.size();i++)
-	{
-		auto& pos = arch.getComponent<ECS::Position>(0);
-		auto& vel = arch.getComponent<ECS::Velocity>(0);
-		pos.x += vel.x;
-		pos.y += vel.y;
-	}
+	//ECS::test();
 }
 
 void StartState::Draw(float dt)

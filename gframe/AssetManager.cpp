@@ -249,10 +249,8 @@ void AssetManager::LoadAllMeshesFromFolder(std::string folderPath)
                 }
                 
             }
-            GetMesh("cube");
         }
     }
-    GetMesh("cube");
 }
 
 

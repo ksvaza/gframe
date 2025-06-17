@@ -1,175 +1,53 @@
 #pragma once
+#include "Types.hpp"
+#include "ComponentFactory.hpp"
 #include <unordered_map>
-#include <typeindex>
-#include <any>
-#include "Position.hpp"
-#include "Velocity.hpp"
-#include <memory>
-#include "BaseComponent.hpp"
-#include <bitset>
-#include <cassert>
 
-namespace ECS
-{
-	using Entity = uint32_t;
-	using ComponentMask = std::bitset<64>;//max 64 components !for now!
+namespace ECS {
 
-	constexpr size_t MAX_COMPONENTS = 64;
-	using ComponentMask = std::bitset<MAX_COMPONENTS>;
+    class Archetype
+    {
+    public:
+        Archetype(const mask& signature);
 
-	class ComponentTypeRegistry 
-	{
-		static inline size_t typeCounter = 0;
-		static inline std::unordered_map<std::type_index, size_t> typeToId;
+        void AddEntity(EntityID entity, const std::unordered_map<ComponentID, void*>& componentData);
+        
+        void RemoveEntity(EntityID entity);
 
-	public:
-		template<typename T>
-		static size_t getId()
-		{
-			std::type_index type(typeid(T));
-			auto it = typeToId.find(type);
-			if (it != typeToId.end())
-				return it->second;
+        void* GetComponent(ComponentID id, size_t index);
 
-			assert(typeCounter < MAX_COMPONENTS && "Too many components!");
-			size_t id = typeCounter++;
-			typeToId[type] = id;
-			return id;
-		}
-	};
+        template<typename T>
+        T* GetComponent(size_t index);
+
+        const mask& GetSignature() const;
+
+        bool Matches(const mask& query) const;
+
+        size_t GetEntityCount() const;
+
+        EntityID GetEntityAt(size_t index) const;
+        
+        void* GetComponentForEntity(EntityID entity, ComponentID id);
+
+        std::unordered_map<ComponentID, void*> GetAllComponentsForEntity(EntityID entity);
 
 
-	class BaseComponentArray {
-	public:
-		virtual ~BaseComponentArray() = default;
-		virtual void remove(size_t index) = 0;
-		virtual void move(size_t from, size_t to) = 0;
-		virtual void* getRaw(size_t index) = 0;
-		virtual void resize(size_t newSize) = 0;
-		virtual void reserve(size_t capacity) = 0;
-	};
+    private:
+        mask signature;
+        std::vector<EntityID> entityIDs;
+        std::unordered_map<EntityID, size_t> entityToIndex;
+        std::unordered_map<ComponentID, std::vector<std::byte>> componentArrays;
+    };
 
-	template<typename T>
-	class ComponentArray : public BaseComponentArray {
-	public:
-		std::vector<T> data;
+    template<typename T>
+    inline T* Archetype::GetComponent(size_t index)
+    {
+        ComponentID id = ComponentFactory::GetId<T>();
+        if (!signature.test(id))
+            return nullptr;
 
-		void remove(size_t index) override
-		{
-			data[index] = std::move(data.back());
-			data.pop_back();
-		}
-		void move(size_t from, size_t to) override 
-		{
-			data[to] = std::move(data[from]);
-		}
-		void* getRaw(size_t index) override
-		{
-			return &data[index];
-		}
-		void resize(size_t newSize) override 
-		{
-			data.resize(newSize);
-		}
-		void reserve(size_t capacity) override 
-		{
-			data.reserve(capacity);
-		}
-		T& get(size_t index) 
-		{
-			return data[index];
-		}
-		void add(const T& component)
-		{
-			data.push_back(component);
-		}
-	};
-
-	class Archetype
-	{
-	private:
-		ComponentMask mask;
-		std::unordered_map<std::type_index, std::unique_ptr<BaseComponentArray>> componentArrays;
-		std::vector<Entity> entities;
-		size_t entityCount = 0;
-	public:
-		
-		template<typename ...T>
-		void Init()
-		{
-			(registerComponent<T>(), ...);
-		}
-		template<typename T>
-		void registerComponent()
-		{
-			const std::type_index index(typeid(T));
-			if (componentArrays.find(index) == componentArrays.end()) 
-			{
-				componentArrays[index] = std::make_unique<ComponentArray<T>>();
-				mask.set(ComponentTypeRegistry::getId<T>());
-			}
-		}
-		ComponentMask getComponentMask() const
-		{
-			return mask;
-		}
-		template<typename... Components>
-		void addEntity(Entity entity, Components&&... components)
-		{
-			(addComponent(std::forward<Components>(components)), ...);
-			entities.push_back(entity);
-			entityCount++;
-		}
-		template<typename T>
-		void addComponent(const T& component) 
-		{
-			auto* array = getComponentArray<T>();
-			array->add(component);
-		}
-		void removeEntity(size_t index) 
-		{
-			assert(index < entityCount);
-			size_t last = entityCount - 1;
-
-			for (auto& [type, array] : componentArrays) 
-			{
-				array->remove(index);
-			}
-
-			entities[index] = entities[last];
-			entities.pop_back();
-			entityCount--;
-		}
-		template<typename T>
-		T& getComponent(size_t index) 
-		{
-			auto* array = getComponentArray<T>();
-			return array->get(index);
-		}
-		template<typename T>
-		ComponentArray<T>* getComponentArray() 
-		{
-			const std::type_index index(typeid(T));
-			auto it = componentArrays.find(index);
-			assert(it != componentArrays.end());
-			return static_cast<ComponentArray<T>*>(it->second.get());
-		}
-		size_t size() const 
-		{
-			return entityCount;
-		}
-		const std::vector<Entity>& getEntities() const
-		{
-			return entities;
-		}
-	};
-
-	//helperitis
-	template<typename... Components>
-	ComponentMask createMask()
-	{
-		ComponentMask mask;
-		(mask.set(ComponentTypeRegistry::getId<Components>()), ...);
-		return mask;
-	}
+        size_t size = ComponentFactory::GetSize(id);
+        auto& array = componentArrays[id];
+        return reinterpret_cast<T*>(array.data() + index * size);
+    }
 }

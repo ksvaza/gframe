@@ -1,14 +1,8 @@
 #pragma once
-#include "BaseComponent.hpp"
-
-
-namespace ECS
+class Velocity
 {
-	struct Velocity : BaseComponent
-	{
-		Velocity() = default;
-		Velocity(float x, float y, float z) : x(x), y(y), z(z) {};
-		float x, y, z;
-	};
-}
-
+public:
+    Velocity(float vx = 0.0f, float vy = 0.0f, float vz = 0.0f)
+        : vx(vx), vy(vy), vz(vz) {};
+    float vx, vy, vz;
+};

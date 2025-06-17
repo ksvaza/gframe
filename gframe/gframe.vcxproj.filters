@@ -37,34 +37,22 @@
     <Filter Include="Header Files\engine\ECS\Components">
       <UniqueIdentifier>{9723238f-9cd8-4af1-a70e-631b5cb9d981}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\engine\Other">
+      <UniqueIdentifier>{78914e7c-73fd-42e0-8633-a65c137f683e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\engine\Other">
+      <UniqueIdentifier>{3f9ed6c7-fdd6-4abd-bf7d-817969f4483a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\engine\ECS\Systems">
+      <UniqueIdentifier>{a3896931-706b-4763-b819-5d448c1f0f2c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="StateMachine.cpp">
-      <Filter>Source Files\engine</Filter>
-    </ClCompile>
-    <ClCompile Include="InputManager.cpp">
-      <Filter>Source Files\engine</Filter>
-    </ClCompile>
-    <ClCompile Include="gframe.cpp">
-      <Filter>Source Files\engine</Filter>
-    </ClCompile>
-    <ClCompile Include="AssetManager.hpp">
-      <Filter>Header Files\engine</Filter>
-    </ClCompile>
-    <ClCompile Include="AssetManager.cpp">
-      <Filter>Source Files\engine</Filter>
-    </ClCompile>
     <ClCompile Include="StartState.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="transform.cpp">
-      <Filter>Source Files\engine</Filter>
-    </ClCompile>
-    <ClCompile Include="Window.cpp">
-      <Filter>Source Files\engine</Filter>
     </ClCompile>
     <ClCompile Include="mesh.cpp">
       <Filter>Source Files\engine\rendering</Filter>
@@ -75,56 +63,62 @@
     <ClCompile Include="shader.cpp">
       <Filter>Source Files\engine\rendering</Filter>
     </ClCompile>
-    <ClCompile Include="stbi_image.cpp">
-      <Filter>Source Files\engine</Filter>
-    </ClCompile>
     <ClCompile Include="texture.hpp">
       <Filter>Header Files\engine\rendering</Filter>
     </ClCompile>
-    <ClCompile Include="Tools.cpp">
-      <Filter>Source Files\engine</Filter>
-    </ClCompile>
-    <ClCompile Include="Tools.hpp">
-      <Filter>Header Files\engine</Filter>
+    <ClCompile Include="AssetManager.hpp">
+      <Filter>Header Files\engine\Other</Filter>
     </ClCompile>
     <ClCompile Include="StateMachine.hpp">
-      <Filter>Header Files\engine</Filter>
+      <Filter>Header Files\engine\Other</Filter>
+    </ClCompile>
+    <ClCompile Include="Tools.hpp">
+      <Filter>Header Files\engine\Other</Filter>
+    </ClCompile>
+    <ClCompile Include="InputManager.cpp">
+      <Filter>Source Files\engine\Other</Filter>
     </ClCompile>
     <ClCompile Include="glad.c">
-      <Filter>Source Files\engine</Filter>
+      <Filter>Source Files\engine\Other</Filter>
+    </ClCompile>
+    <ClCompile Include="StateMachine.cpp">
+      <Filter>Source Files\engine\Other</Filter>
+    </ClCompile>
+    <ClCompile Include="stbi_image.cpp">
+      <Filter>Source Files\engine\Other</Filter>
+    </ClCompile>
+    <ClCompile Include="gframe.cpp">
+      <Filter>Source Files\engine\Other</Filter>
+    </ClCompile>
+    <ClCompile Include="Tools.cpp">
+      <Filter>Source Files\engine\Other</Filter>
+    </ClCompile>
+    <ClCompile Include="Window.cpp">
+      <Filter>Source Files\engine\Other</Filter>
+    </ClCompile>
+    <ClCompile Include="AssetManager.cpp">
+      <Filter>Source Files\engine\Other</Filter>
+    </ClCompile>
+    <ClCompile Include="transform.cpp">
+      <Filter>Source Files\engine\Other</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentFactory.hpp">
+      <Filter>Header Files\engine\ECS</Filter>
+    </ClCompile>
+    <ClCompile Include="ComponentFactory.cpp">
+      <Filter>Source Files\engine\ECS</Filter>
     </ClCompile>
     <ClCompile Include="Archetype.cpp">
       <Filter>Source Files\engine\ECS</Filter>
     </ClCompile>
-    <ClCompile Include="World.cpp">
+    <ClCompile Include="ecs.cpp">
       <Filter>Source Files\engine\ECS</Filter>
     </ClCompile>
-    <ClCompile Include="Position.hpp">
+    <ClCompile Include="Velocity.hpp">
       <Filter>Header Files\engine\ECS\Components</Filter>
-    </ClCompile>
-    <ClCompile Include="ECS.cpp">
-      <Filter>Source Files\engine\ECS</Filter>
-    </ClCompile>
-    <ClCompile Include="BaseComponent.cpp">
-      <Filter>Source Files\engine\ECS</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="State.hpp">
-      <Filter>Header Files\engine</Filter>
-    </ClInclude>
-    <ClInclude Include="InputManager.hpp">
-      <Filter>Header Files\engine</Filter>
-    </ClInclude>
-    <ClInclude Include="gframe.hpp">
-      <Filter>Header Files\engine</Filter>
-    </ClInclude>
-    <ClInclude Include="Window.hpp">
-      <Filter>Header Files\engine</Filter>
-    </ClInclude>
-    <ClInclude Include="transform.hpp">
-      <Filter>Header Files\engine</Filter>
-    </ClInclude>
     <ClInclude Include="mesh.hpp">
       <Filter>Header Files\engine\rendering</Filter>
     </ClInclude>
@@ -134,26 +128,41 @@
     <ClInclude Include="shader.hpp">
       <Filter>Header Files\engine\rendering</Filter>
     </ClInclude>
-    <ClInclude Include="stb_image.h">
-      <Filter>Header Files\engine</Filter>
-    </ClInclude>
     <ClInclude Include="StartState.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="World.hpp">
+    <ClInclude Include="gframe.hpp">
+      <Filter>Header Files\engine\Other</Filter>
+    </ClInclude>
+    <ClInclude Include="InputManager.hpp">
+      <Filter>Header Files\engine\Other</Filter>
+    </ClInclude>
+    <ClInclude Include="stb_image.h">
+      <Filter>Header Files\engine\Other</Filter>
+    </ClInclude>
+    <ClInclude Include="State.hpp">
+      <Filter>Header Files\engine\Other</Filter>
+    </ClInclude>
+    <ClInclude Include="transform.hpp">
+      <Filter>Header Files\engine\Other</Filter>
+    </ClInclude>
+    <ClInclude Include="Window.hpp">
+      <Filter>Header Files\engine\Other</Filter>
+    </ClInclude>
+    <ClInclude Include="Types.hpp">
       <Filter>Header Files\engine\ECS</Filter>
     </ClInclude>
     <ClInclude Include="Archetype.hpp">
       <Filter>Header Files\engine\ECS</Filter>
     </ClInclude>
-    <ClInclude Include="ECS.hpp">
+    <ClInclude Include="ecs.hpp">
       <Filter>Header Files\engine\ECS</Filter>
     </ClInclude>
-    <ClInclude Include="Velocity.hpp">
+    <ClInclude Include="Position.hpp">
       <Filter>Header Files\engine\ECS\Components</Filter>
     </ClInclude>
-    <ClInclude Include="BaseComponent.hpp">
-      <Filter>Header Files\engine\ECS\Components</Filter>
+    <ClInclude Include="Movement.hpp">
+      <Filter>Header Files\engine\ECS\Systems</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
