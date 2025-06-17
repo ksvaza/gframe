@@ -44,7 +44,7 @@ GameEngine
 │   │   └── System Scheduler ✅ (needs to be rewritten)
 │   ├── Event System ❌
 │   ├── State Manager ✅ (needs to be optimized)
-│   └── Time Manager ❌
+│   └── Time Manager ❌ (Central place to track game time, dt)
 │
 ├── Input
 │   ├── Input Manager ✅
@@ -63,7 +63,7 @@ GameEngine
 │   ├── Collision Detection ❌
 │   │   ├── AABB ❌
 │   │   └── Raycasting ❌
-│   ├── Physics Resolution ❌
+│   ├── Physics ❌
 │   └── Rigidbody/StaticBody ❌
 │
 ├── Audio
@@ -76,7 +76,7 @@ GameEngine
 │   │   ├── Mesh Loader 🟡
 │   │   ├── Texture Loader 🟡
 │   │   └── Shader Loader 🟡
-│   └── Hot Reloading ❌
+│   └── Hot Reloading ❌ (Reload assets or code at runtime without restarting the game)
 │
 ├── Windowing / Platform
 │   ├── Window Abstraction 🟡
@@ -84,9 +84,9 @@ GameEngine
 │   ├── VSync / Framerate ❌
 │   └── Platform Abstraction ❌
 │
-├── Scripting
+├── Scripting (Nu gan jau ka nevajag be ja nu)
 │   ├── Script System ❌
-│   └── Script Binding Layer (e.g., Lua/C#/Python) ❌
+│   └── Script Binding Layer ❌
 │
 ├── Tools / Debugging
 │   ├── Debug Overlay (FPS, stats) ❌
@@ -97,8 +97,6 @@ GameEngine
 ├── Game Logic Layer
 │   ├── Player Controller 🟡
 │   ├── AI System ❌
-│   ├── Health/Damage System ❌
-│   └── Mission / Game Rules ❌
 │
 └── Editor (optional)
     ├── Scene View ❌
