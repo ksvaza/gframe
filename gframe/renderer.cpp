@@ -274,7 +274,7 @@ close:
 	return ret_val;
 }*/
 
-int Renderer::DrawMesh(Mesh& mesh, Shader shader)
+int Renderer::DrawMesh(Mesh& mesh, Shader shader, glm::mat4 viewMatrix, glm::mat4 projectionMatrix)
 {
 	if (!mesh.uploaded)
 	{
@@ -289,13 +289,14 @@ int Renderer::DrawMesh(Mesh& mesh, Shader shader)
 
 	shader.Use();
 
+
 	unsigned int modelLoc = glGetUniformLocation(shader.GetID(), "model");
-	//unsigned int viewLoc = glGetUniformLocation(shader.GetID(), "view");
-	//unsigned int projLoc = glGetUniformLocation(shader.GetID(), "projection");
+	unsigned int viewLoc = glGetUniformLocation(shader.GetID(), "view");
+	unsigned int projLoc = glGetUniformLocation(shader.GetID(), "projection");
 
 	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(mesh.transform.GetMatrix()));
-	//glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(viewMatrix));
-	//glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projectionMatrix));
+	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(viewMatrix));
+	glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projectionMatrix));
 
 
 	glBindVertexArray(mesh.VAO);

@@ -64,4 +64,6 @@ public:
 
 	static int DrawMesh(Mesh& mesh, Shader shader);
 	static void Clear(glm::vec4 colour);
+	int DrawMesh(Mesh& mesh, Shader shader, glm::mat4 viewMatrix, glm::mat4 projectionMatrix);
+	void Clear(glm::vec4 colour);
 };

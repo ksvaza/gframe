@@ -9,7 +9,12 @@
 #include <iostream>
 #include <memory>
 #include <string>
+#include "ecs.hpp"
 
+struct Player
+{
+
+};
 
 struct GframeData
 {
@@ -19,6 +24,7 @@ struct GframeData
 	InputManager Input;
 	AssetManager AssetManager;
 	Tools tools;
+	ECS::ecs ecs;
 };
 
 typedef std::shared_ptr<GframeData> GframeDataRef;

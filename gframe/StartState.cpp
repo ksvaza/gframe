@@ -3,33 +3,48 @@
 #define _USE_MATH_DEFINES
 #include <math.h>
 #include "texture.hpp"
+#include <glm/gtc/matrix_transform.hpp>
+#include "Position.hpp"
+#include "Velocity.hpp"
+#include "Orientation.hpp"
+#include "InputTag.hpp"
+#include "MovementSystem.hpp"
+#include "Movement.hpp"
+
+
 
 void StartState::Init()
 {
-	_data->AssetManager.LoadTexture("check", "C:/Users/jekabins/Downloads/test.png");
-	//_data->AssetManager.UnloadTexture("check");
+	entity = _data->ecs.CreateEntity();
+	_data->ecs.RegisterComponent<Position>();
+	_data->ecs.RegisterComponent<Velocity>();
+	_data->ecs.RegisterComponent<Orientation>();
+	_data->ecs.RegisterComponent<InputTag>();
+	_data->ecs.RegisterComponent<PlayerTag>();
 
+	_data->ecs.AddComponent<Position>(entity, Position{ 0.0f, 0.0f, 0.0f });
+	_data->ecs.AddComponent<Velocity>(entity, Velocity{ 0.0f, 0.0f, 0.0f });
+	_data->ecs.AddComponent<Orientation>(entity, Orientation{ 0.0f, 0.0f });
+	_data->ecs.AddComponent<InputTag>(entity, InputTag{});
+	_data->ecs.AddComponent<PlayerTag>(entity, PlayerTag{});
+
+	_data->ecs.RegisterSystem(MovementSystem);
+	_data->ecs.RegisterSystem(UpdateMovement);
+	/*_data->ecs.RegisterSystem([this](ECS::ecs& ecs, float dt) {
+		_data->window.height;
+
+
+		});*/
+
+	yaw = -90.0f;
+	pitch = 0;
+	CameraPos = glm::vec3(0.0f, 0.0f, 30.0f);
+
+	_data->AssetManager.LoadAllMeshesFromFolder("../StartState");
 	Pixel3* pixels = _data->AssetManager.GetTexture("check").data.ch3;
-	std::cout << _data->AssetManager.GetTexture("check").nrChannels << '\n' << '\n';
-	//for (int i = 0; i < _data->AssetManager.GetTexture("check").width * _data->AssetManager.GetTexture("check").height;i++)
-	//{
-	//	/*std::cout << "Pixel " << i << ": "
-	//		<< +pixels[i].r << ", "
-	//		<< +pixels[i].g << ", "
-	//		<< +pixels[i].b << ", "
-	//		<< +pixels[i].a << "\n";*/
-	//	std::cout << "Pixel " << i << ": "
-	//		<< +pixels[i].r << ", "
-	//		<< +pixels[i].g << ", "
-	//		<< +pixels[i].b << "\n";
-	//}
 
-
-	//testMesh.Create(3, 1);
-	//testMesh.vertices[0] = Vertex{ -0.5, -0.5, 0.0, 1.0, (float)0.8431372549, 0.0, 1.0, 0.0, 0.0 };
-	//testMesh.vertices[1] = Vertex{  0.5, -0.5, 0.0, 1.0, (float)0.8431372549, 0.0, 1.0, 0.0, 0.0 };
-	//testMesh.vertices[2] = Vertex{  0.0,  0.5, 0.0, 1.0, (float)0.8431372549, 0.0, 1.0, 0.0, 0.0 };
-	//testMesh.faces[0] = Face{ 0, 1, 2, glm::vec3(0.0), -1 };
+	testMesh2 = _data->AssetManager.GetMesh("cube");
+	//std::cout << testMesh2;
 
 	Mesh circleMesh, rectMesh, lineMesh;
 
@@ -45,13 +60,17 @@ void StartState::Init()
 	Mesh::Modify::Colour(lineMesh, glm::vec4(1.0, 1.0, 0.0, 1.0));
 	Mesh::Bake::RectanglesC(lineMesh);
 
+
 	Mesh::Modify::Append(testMesh, circleMesh);
 	//Mesh::Modify::Append(testMesh, rectMesh);
 	Mesh::Modify::Append(testMesh, lineMesh);
 
 	testMesh.transform.scale = glm::vec3(1.0);
 	//Mesh::Construct::Circle(testMesh, glm::vec2(0.0), 0.5, 2000);
-	testMesh.Print();
+	//testMesh.Print();
+
+	std::cout << testMesh2;
+	testMesh2.transform.scale = glm::vec3(1.0f);
 
 	testShader.Read("vertex.glsl", GL_VERTEX_SHADER);    
 	testShader.Read("fragment.glsl", GL_FRAGMENT_SHADER);
@@ -68,20 +87,47 @@ void StartState::Init()
 
 void StartState::HandleInput()
 {
+	float sensitivity = 0.1f;
+	float speed = 1.0f;
+	if (Input.Button(0))
 	{
-		testMesh.transform.position.y += 0.01;
+		yaw += Input.MouseDeltaPosition().x * sensitivity;
+		pitch -= Input.MouseDeltaPosition().y * sensitivity;
+
+		if (pitch > 89.0f) pitch = 89.0f;
+		if (pitch < -89.0f) pitch = -89.0f;
+
+		glfwSetInputMode(_data->window.glWindow, GLFW_CURSOR, GLFW_CURSOR_HIDDEN);
+	}
+	else
+		glfwSetInputMode(_data->window.glWindow, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+	
+
+
+
+	if (Input.Key(GLFW_KEY_W))
+	{
+		CameraPos.z -= speed;
 	}
 	if (Input.Key(GLFW_KEY_S))
 	{
-		testMesh.transform.position.y -= 0.01;
+		CameraPos.z += speed;
 	}
 	if (Input.Key(GLFW_KEY_A))
 	{
-		testMesh.transform.position.x -= 0.01;
+		CameraPos.x -= speed;
 	}
 	if (Input.Key(GLFW_KEY_D))
 	{
-		testMesh.transform.position.x += 0.01;
+		CameraPos.x += speed;
+	}
+	if (Input.Key(GLFW_KEY_SPACE))
+	{
+		CameraPos.y += speed;
+	}
+	if (Input.Key(GLFW_KEY_LEFT_SHIFT))
+	{
+		CameraPos.y -= speed;
 	}
 
 
@@ -113,17 +159,41 @@ void StartState::HandleInput()
 
 void StartState::Update(float dt)
 {
-	//testMesh.transform.position.x += 0;
-	//std::cout << testMesh.transform.position.x << ' ';
+	_data->ecs.UpdateSystems(dt);
+	Velocity* vel = _data->ecs.GetComponentForEntity<Velocity>(entity);
+	//std::cout << "Velocity: " << vel->vx << ", " << vel->vy << ", " << vel->vz << " | ";
+	Position* pos = _data->ecs.GetComponentForEntity<Position>(entity);
+	//std::cout << "Position: " << pos->x << ", " << pos->y << ", " << pos->z << " | ";
+	Orientation * orient = _data->ecs.GetComponentForEntity<Orientation>(entity);
+	//std::cout << "Orientation: " << orient->yaw << ", " << orient->pitch << std::endl;
 }
 
 void StartState::Draw(float dt)
 {
-	printf("Draw\n");
+	Position* pos = _data->ecs.GetComponentForEntity<Position>(entity);
+	Orientation* orient = _data->ecs.GetComponentForEntity<Orientation>(entity);
+	
+	CameraFront = glm::normalize(glm::vec3(cos(glm::radians(orient->yaw)) * cos(glm::radians(orient->pitch)),
+		sin(glm::radians(orient->pitch)),
+		sin(glm::radians(orient->yaw)) * cos(glm::radians(orient->pitch))));
+
+	glm::mat4 viewMatrix = glm::lookAt(
+		glm::vec3(pos->x, pos->y, pos->z), //camera pos
+		CameraFront + glm::vec3(pos->x, pos->y, pos->z), //look at pos !!not look at vector!!
+		glm::vec3(0.0f, 1.0f, 0.0f)  //Up Direction
+	);
+
+	float aspectRatio = (float)_data->window.width / (float)_data->window.height;
+	glm::mat4 projectionMatrix = glm::perspective(
+		glm::radians(80.0f),
+		aspectRatio,
+		0.1f,  //tuvais grieziens
+		1000.0f //talais grieziens
+	);
+
+
 	Render.Clear(glm::vec4(0.8, 0.0, 0.0, 1.0));
-	//Render.DrawMesh(testMesh, testShader);
-	batch.Draw(testShader);
-	printf("Done \n");
+	Render.DrawMesh(testMesh2, testShader, viewMatrix, projectionMatrix);
 }
 
 void StartState::Pause()

@@ -41,7 +41,7 @@ int Window::Create(int width, int height, std::string title)
 	// Set window return pointer
 	glfwSetWindowUserPointer(glWindow, this);
 
-	glEnable(GL_DEPTH_TEST);
+	//glEnable(GL_DEPTH_TEST);
 
 	glViewport(0, 0, width, height);
 	this->width = width;

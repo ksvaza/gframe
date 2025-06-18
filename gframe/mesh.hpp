@@ -22,7 +22,7 @@ struct Face
 
 struct TextureRef
 {
-	std::string_view texName;
+	std::string texName;
 	// Buutu veel jaauzraksta AssetManager, lai sheit vareetu pabeigt liidz galam.
 };
 
@@ -99,4 +99,6 @@ public:
 		static int Append(Mesh& mesh, Mesh& add);
 	};
 };
+
+
 std::ostream& operator<<(std::ostream& os, const Mesh& mesh);

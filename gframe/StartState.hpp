@@ -28,4 +28,12 @@ private:
 
 	Shader testShader;
 	Mesh testMesh;
+	Mesh testMesh2;
+	glm::vec3 CameraPos;
+	glm::vec3 CameraFront;
+
+	float yaw;
+	float pitch;
+
+	EntityID entity;
 };

@@ -135,13 +135,20 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Archetype.cpp" />
     <ClCompile Include="AssetManager.cpp" />
     <ClCompile Include="AssetManager.hpp" />
+    <ClCompile Include="ComponentFactory.cpp" />
+    <ClCompile Include="ComponentFactory.hpp" />
+    <ClCompile Include="ecs.cpp" />
     <ClCompile Include="gframe.cpp" />
     <ClCompile Include="glad.c" />
     <ClCompile Include="InputManager.cpp" />
+    <ClCompile Include="InputTag.hpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="mesh.cpp" />
+    <ClCompile Include="MovementSystem.hpp" />
+    <ClCompile Include="PlayerTag.hpp" />
     <ClCompile Include="renderer.cpp" />
     <ClCompile Include="shader.cpp" />
     <ClCompile Include="StartState.cpp" />
@@ -152,18 +159,25 @@
     <ClCompile Include="Tools.cpp" />
     <ClCompile Include="Tools.hpp" />
     <ClCompile Include="transform.cpp" />
+    <ClCompile Include="Velocity.hpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Archetype.hpp" />
+    <ClInclude Include="Orientation.hpp" />
+    <ClInclude Include="ecs.hpp" />
     <ClInclude Include="gframe.hpp" />
     <ClInclude Include="InputManager.hpp" />
     <ClInclude Include="mesh.hpp" />
+    <ClInclude Include="Movement.hpp" />
+    <ClInclude Include="Position.hpp" />
     <ClInclude Include="renderer.hpp" />
     <ClInclude Include="shader.hpp" />
     <ClInclude Include="StartState.hpp" />
     <ClInclude Include="State.hpp" />
     <ClInclude Include="stb_image.h" />
     <ClInclude Include="transform.hpp" />
+    <ClInclude Include="Types.hpp" />
     <ClInclude Include="Window.hpp" />
   </ItemGroup>
   <ItemGroup>

@@ -6,7 +6,7 @@
 
 int main(void)
 {
-    Gframe game(800, 600, "Hello my goofy ahh comrades!");
+    Gframe game(800, 800, "Hello my goofy ahh comrades!");
     
  //   Window window;
 	//window.Create(800, 600, "Hello World");
