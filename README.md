@@ -28,3 +28,80 @@ Batch sistēmai.
 6. Kautkāds veids, kā lielāko daļu no darba varētu saglabāt nākamajai zīmēšanas reizei, lai varētu pārrēķināt tikai relatīvās izmaiņas starp kadriem.
 
 Meshiem jāpārskata loģika par aizsūtīto informāciju. Iespējams katrā verteksā jāiekļauj arī normālvirziens un tekstūras identifikators, ko varētu izmantot batch sistēma, lai iedalītu tekstūras.
+
+
+
+### Jekabins
+
+
+<pre lang="markdown">
+GameEngine
+├── Core Engine
+│   ├── ECS ✅
+│   │   ├── Entity Manager ✅
+│   │   ├── Component System ✅
+│   │   ├── Archetype Storage ✅
+│   │   └── System Scheduler ✅ (needs to be rewritten)
+│   ├── Event System ❌
+│   ├── State Manager ✅ (needs to be optimized)
+│   └── Time Manager ❌ (Central place to track game time, dt)
+│
+├── Input
+│   ├── Input Manager ✅
+│
+├── Rendering
+│   ├── Renderer Backend 🟡
+│   │   ├── Render Loop ✅
+│   │   ├── Shader System ❌
+│   │   ├── Mesh System 🟡
+│   │   └── Material System ❌
+│   ├── Camera System 🟡
+│   ├── Lighting System ❌
+│   └── UI System ❌
+│
+├── Physics
+│   ├── Collision Detection ❌
+│   │   ├── AABB ❌
+│   │   └── Raycasting ❌
+│   ├── Physics ❌
+│   └── Rigidbody/StaticBody ❌
+│
+├── Audio
+│   ├── Audio Manager ❌
+│   ├── Sound Playback ❌
+│   └── 3D Spatial Audio ❌
+│
+├── Resources / Assets
+│   ├── Asset Manager 🟡
+│   │   ├── Mesh Loader 🟡
+│   │   ├── Texture Loader 🟡
+│   │   └── Shader Loader 🟡
+│   └── Hot Reloading ❌ (Reload assets or code at runtime without restarting the game)
+│
+├── Windowing / Platform
+│   ├── Window Abstraction 🟡
+│   ├── Monitor Info ❌
+│   ├── VSync / Framerate ❌
+│   └── Platform Abstraction ❌
+│
+├── Scripting (Nu gan jau ka nevajag be ja nu)
+│   ├── Script System ❌
+│   └── Script Binding Layer ❌
+│
+├── Tools / Debugging
+│   ├── Debug Overlay (FPS, stats) ❌
+│   ├── Entity Inspector ❌
+│   ├── Console / Logging System ❌
+│   └── Visual Profiler ❌
+│
+├── Game Logic Layer
+│   ├── Player Controller 🟡
+│   ├── AI System ❌
+│
+└── Editor (optional)
+    ├── Scene View ❌
+    ├── Hierarchy Panel ❌
+    ├── Component Inspector ❌
+    └── Save/Load Scenes ❌
+</pre>
+

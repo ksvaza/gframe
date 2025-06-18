@@ -120,6 +120,7 @@ void Shader::Delete() // Shis ir pavisam nepareizi un uzreiz kaa straadaa failuc
 {
     //if (vertexShaderSrc) { free(vertexShaderSrc); }
     //if (fragmentShaderSrc) { free(fragmentShaderSrc); }
+    if (shaderProgramID) { glDeleteProgram(shaderProgramID); }
 }
 
 Shader::Shader()

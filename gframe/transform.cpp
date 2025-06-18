@@ -37,3 +37,10 @@ glm::mat4 Transform::GetMatrix() const
 
     return matrix;
 }
+bool Transform::Equal(Transform& transform)
+{
+	if (position != transform.position) { return false; }
+	if (rotation != transform.rotation) { return false; }
+	if (scale != transform.scale) { return false; }
+	return true;
+}

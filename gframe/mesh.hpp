@@ -36,6 +36,7 @@ public:
 
 	void UploadToGPU();
 
+	bool changed = false;
 
 	Vertex* vertices = NULL;
 	int vertexCount = 0;

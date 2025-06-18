@@ -9,6 +9,7 @@
 
 Mesh::Mesh()
 {
+    changed = false;
     vertices = NULL;
     vertexCount = 0;
     faces = NULL;
@@ -82,6 +83,7 @@ int Mesh::CreateV(int vertexCount)
     }
     this->vertexCount = vertexCount;
 
+    changed = true;
     return 0;
 }
 
@@ -101,6 +103,7 @@ int Mesh::CreateF(int faceCount)
     }
     this->faceCount = faceCount;
 
+    changed = true;
     return 0;
 }
 
@@ -128,6 +131,7 @@ int Mesh::RecreateV(int vertexCount)
     }
     else { CreateV(vertexCount); }
 
+    changed = true;
     return 0;
 }
 
@@ -147,6 +151,7 @@ int Mesh::RecreateF(int faceCount)
     }
     else { CreateF(faceCount); }
 
+    changed = true;
     return 0;
 }
 
@@ -155,6 +160,7 @@ void Mesh::Delete()
     if (vertices) { free(vertices); }
     if (faces) { free(faces); }
     if (textureReferences) { free(textureReferences); }
+    changed = true;
 }
 
 std::string Mesh::sPrint()
@@ -480,6 +486,7 @@ void Mesh::Modify::Colour(Mesh& mesh, glm::vec4 colour)
         v[i].b = colour.b;
         v[i].a = colour.a;
     }
+    mesh.changed = true;
 }
 
 int Mesh::Modify::Append(Mesh& mesh, Mesh& add)

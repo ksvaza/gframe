@@ -76,6 +76,12 @@ void StartState::Init()
 	testShader.Read("fragment.glsl", GL_FRAGMENT_SHADER);
 	testShader.Compile();
 
+	batch.AddMesh(circleMesh);
+	batch.AddMesh(rectMesh);
+	batch.AddMesh(lineMesh);
+
+	batch.OrderAndMapData();
+
 	printf("Start State initialised!\n");
 }
 
@@ -143,6 +149,11 @@ void StartState::HandleInput()
 	else if (Input.MouseScrollOffset().y < 0)
 	{
 		printf("Down\n");
+	}
+
+	if (Input.ButtonDown(GLFW_MOUSE_BUTTON_LEFT))
+	{
+		printf("Spawn\n");
 	}
 }
 

@@ -24,6 +24,7 @@ private:
 	GframeDataRef _data;
 	InputManager Input = _data->Input;
 	Renderer Render = _data->Render;
+	Renderer::Batch batch = Renderer::Batch();
 
 	Shader testShader;
 	Mesh testMesh;

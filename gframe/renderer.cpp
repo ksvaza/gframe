@@ -1,9 +1,41 @@
 #include "renderer.hpp"
 #include <glm/gtc/type_ptr.hpp>
 
+
+void Renderer::MeshSnapshot::Capture(Mesh& mesh)
+{
+	vertexCount = mesh.vertexCount;
+	faceCount = mesh.faceCount;
+	transform = mesh.transform;
+	colour = mesh.colour;
+}
+
+bool Renderer::MeshSnapshot::Equals(Mesh& mesh)
+{
+	if (vertexCount != mesh.vertexCount) { return false; }
+	if (faceCount != mesh.faceCount) { return false; }
+	if (!transform.Equal(mesh.transform)) { return false; }
+	if (colour != mesh.colour) { return false; }
+	return true;
+}
+
+Renderer::MeshSnapshot::MeshSnapshot()
+{
+	vertexCount = 0;
+	faceCount = 0;
+	transform = Transform();
+	colour = glm::vec4(1.0f);
+}
+
 Renderer::DrawData Renderer::orderData(Mesh& mesh)
 {
 	DrawData ret_data;
+	if (mesh.faceCount < 1)
+	{
+		ret_data.vertices = NULL;
+		ret_data.indices = NULL;
+		return ret_data;
+	}
 	ret_data.vertices = (float*)mesh.vertices;
 	ret_data.indices = (GLuint*)malloc(sizeof(GLuint) * 3 * mesh.faceCount);
 	if (ret_data.indices)
@@ -26,6 +58,153 @@ void Renderer::cleanupData(DrawData data)
 {
 	data.vertices = NULL;
 	if (data.indices) { free(data.indices); }
+}
+
+int Renderer::Batch::AddMesh(Mesh& mesh)
+{
+	Mesh* meshPtr = &mesh;
+	if (!meshPtr) { return 1; }
+	if (meshCount == 0)
+	{
+		meshes = (Mesh**)malloc(sizeof(Mesh*));
+		if (!meshes) { return 1; }
+		meshSnapshots = (MeshSnapshot*)malloc(sizeof(MeshSnapshot*));
+		if (!meshSnapshots) { return 1; }
+	}
+	else
+	{
+		void* temp = realloc(meshes, sizeof(Mesh*) * (meshCount + 1));
+		if (!temp) { free(meshes); return 1; }
+		meshes = (Mesh**)temp;
+		temp = realloc(meshSnapshots, sizeof(MeshSnapshot*) * (meshCount + 1));
+		if (!temp) { free(meshSnapshots); return 1; }
+		meshSnapshots = (MeshSnapshot*)temp;
+	}
+	meshes[meshCount] = meshPtr;
+	meshSnapshots[meshCount].Capture(mesh);
+	mesh.changed = true;
+	totalVertexCount += mesh.vertexCount;
+	totalFaceCount += mesh.faceCount;
+	meshCount++;
+
+	return 0;
+}
+
+int Renderer::Batch::OrderAndMapData()
+{
+	if (VAO || VBO || EBO) { FreeData(); }
+	glGenVertexArrays(1, &VAO);
+	glGenBuffers(1, &VBO);
+	glGenBuffers(1, &EBO);
+
+	glBindVertexArray(VAO);
+
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferData(GL_ARRAY_BUFFER, totalVertexCount * sizeof(Vertex), NULL, GL_DYNAMIC_DRAW);
+	Vertex* vPtr = (Vertex*)glMapBuffer(GL_ARRAY_BUFFER, GL_WRITE_ONLY);
+	if (!vPtr) { return 1; }
+	int ofs = 0;
+	for (int i = 0; i < meshCount; i++)
+	{
+		memcpy(vPtr + ofs, meshes[i]->vertices, meshes[i]->vertexCount * sizeof(Vertex));
+		ofs += meshes[i]->vertexCount;
+	}
+	glUnmapBuffer(GL_ARRAY_BUFFER);
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, totalFaceCount * sizeof(dFace), NULL, GL_DYNAMIC_DRAW);
+	dFace* fPtr = (dFace*)glMapBuffer(GL_ELEMENT_ARRAY_BUFFER, GL_WRITE_ONLY);
+	if (!fPtr) { return 1; }
+	ofs = 0;
+	int fOfs = 0;
+	for (int i = 0; i < meshCount; i++)
+	{
+		for (int j = 0; j < meshes[i]->faceCount; j++)
+		{
+			Face face = meshes[i]->faces[j];
+			fPtr[fOfs + j].i = face.index[0] + ofs;
+			fPtr[fOfs + j].j = face.index[1] + ofs;
+			fPtr[fOfs + j].k = face.index[2] + ofs;
+		}
+		ofs += meshes[i]->vertexCount;
+		fOfs += meshes[i]->faceCount;
+	}
+	glUnmapBuffer(GL_ELEMENT_ARRAY_BUFFER);
+
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0); // Position
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(3 * sizeof(float))); // Colour
+	glEnableVertexAttribArray(1);
+
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindVertexArray(0);
+
+	return 0;
+}
+
+void Renderer::Batch::FreeData()
+{
+	if (VAO) { glDeleteVertexArrays(1, &VAO); }
+	if (VBO) { glDeleteBuffers(1, &VBO); }
+	if (EBO) { glDeleteBuffers(1, &EBO); }
+}
+
+int Renderer::Batch::UpdateData()
+{
+	bool changes = false;
+	for (int i = 0; i < meshCount; i++)
+	{
+		if (meshes[i]->changed)
+		{
+			changes = true;
+			meshes[i]->changed = false;
+			meshSnapshots[i].Capture(*meshes[i]);
+		}
+	}
+	if (changes)
+	{
+		OrderAndMapData();
+	}
+	return 0;
+}
+
+int Renderer::Batch::Draw(Shader shader)
+{
+	//UpdateData();
+	printf("BDraw 1\n");
+	shader.Use();
+
+	printf("BDraw 2\n");
+	glBindVertexArray(VAO);
+
+	printf("BDraw 3\n");
+	glDrawElements(GL_TRIANGLES, totalFaceCount * 3, GL_UNSIGNED_INT, 0);
+
+	printf("BDraw 4\n");
+	glBindVertexArray(0);
+
+	printf("BDraw 5\n");
+
+	return 0;
+}
+
+Renderer::Batch::Batch()
+{
+	meshes = NULL;
+	meshCount = 0;
+	totalVertexCount = 0;
+	totalFaceCount = 0;
+	VAO = 0;
+	VBO = 0;
+	EBO = 0;
+}
+
+Renderer::Batch::~Batch()
+{
+	free(meshes);
+	free(meshSnapshots);
+	meshCount = 0;
+	//FreeData();
 }
 
 
