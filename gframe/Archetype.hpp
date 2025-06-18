@@ -31,7 +31,8 @@ namespace ECS {
 
         std::unordered_map<ComponentID, void*> GetAllComponentsForEntity(EntityID entity);
 
-
+        template<typename... T>
+        bool hasComponents() const;
     private:
         mask signature;
         std::vector<EntityID> entityIDs;
@@ -49,5 +50,11 @@ namespace ECS {
         size_t size = ComponentFactory::GetSize(id);
         auto& array = componentArrays[id];
         return reinterpret_cast<T*>(array.data() + index * size);
+    }
+
+    template<typename ...T>
+    inline bool Archetype::hasComponents() const
+    {
+        return ((signature.test(ComponentFactory::GetId<T>())) && ...);
     }
 }

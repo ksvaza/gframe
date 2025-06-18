@@ -12,51 +12,38 @@ namespace ECS
         using SystemFn = std::function<void(ecs&, float)>;
         EntityID CreateEntity();
         
-
         void RemoveEntity(EntityID entity);
         
-
         template<typename T>
         void AddComponent(EntityID entity, T&& component);
         
-
         template<typename T>
         void RemoveComponent(EntityID entity);
 
         template<typename T>
         ComponentID RegisterComponent();
         
-
         std::unordered_map<ComponentID, void*> GetAllComponentsForEntity(EntityID entity);
-        
 
         template<typename T>
         T* GetComponentForEntity(EntityID entity);
-        
 
         void* GetComponentForEntity(EntityID entity, ComponentID id);
-        
 
         Archetype* FindArchetypeWithExactMask(const mask& m) const;
         
-
         std::vector<Archetype*> FindArchetypesWithMask(const mask& m) const;
         
-
         template<typename... T>
         std::vector<Archetype*> FindArchetypesWithMask() const;
         
-
         void RegisterSystem(SystemFn fn);
         
-
         void UpdateSystems(float dt);
         
-
         template<typename T>
         ComponentID GetComponentId();
         
-
     private:
         EntityID NextId = 0;
         ComponentFactory factory;

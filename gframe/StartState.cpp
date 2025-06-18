@@ -11,7 +11,7 @@
 #include "MovementSystem.hpp"
 #include "Movement.hpp"
 
-EntityID entity;
+
 
 void StartState::Init()
 {
@@ -20,14 +20,13 @@ void StartState::Init()
 	_data->ecs.RegisterComponent<Velocity>();
 	_data->ecs.RegisterComponent<Orientation>();
 	_data->ecs.RegisterComponent<InputTag>();
+	_data->ecs.RegisterComponent<PlayerTag>();
 
 	_data->ecs.AddComponent<Position>(entity, Position{ 0.0f, 0.0f, 0.0f });
 	_data->ecs.AddComponent<Velocity>(entity, Velocity{ 0.0f, 0.0f, 0.0f });
 	_data->ecs.AddComponent<Orientation>(entity, Orientation{ 0.0f, 0.0f });
 	_data->ecs.AddComponent<InputTag>(entity, InputTag{});
-
-
-	InputManager::Button(0);
+	_data->ecs.AddComponent<PlayerTag>(entity, PlayerTag{});
 
 	_data->ecs.RegisterSystem(MovementSystem);
 	_data->ecs.RegisterSystem(UpdateMovement);
@@ -151,20 +150,25 @@ void StartState::Update(float dt)
 {
 	_data->ecs.UpdateSystems(dt);
 	Velocity* vel = _data->ecs.GetComponentForEntity<Velocity>(entity);
-	std::cout << "Velocity: " << vel->vx << ", " << vel->vy << ", " << vel->vz << " | ";
+	//std::cout << "Velocity: " << vel->vx << ", " << vel->vy << ", " << vel->vz << " | ";
 	Position* pos = _data->ecs.GetComponentForEntity<Position>(entity);
-	std::cout << "Position: " << pos->x << ", " << pos->y << ", " << pos->z << std::endl;
+	//std::cout << "Position: " << pos->x << ", " << pos->y << ", " << pos->z << " | ";
+	Orientation * orient = _data->ecs.GetComponentForEntity<Orientation>(entity);
+	//std::cout << "Orientation: " << orient->yaw << ", " << orient->pitch << std::endl;
 }
 
 void StartState::Draw(float dt)
 {
-	CameraFront = glm::normalize(glm::vec3(cos(glm::radians(yaw)) * cos(glm::radians(pitch)), 
-		sin(glm::radians(pitch)),
-		sin(glm::radians(yaw)) * cos(glm::radians(pitch))));
+	Position* pos = _data->ecs.GetComponentForEntity<Position>(entity);
+	Orientation* orient = _data->ecs.GetComponentForEntity<Orientation>(entity);
+	
+	CameraFront = glm::normalize(glm::vec3(cos(glm::radians(orient->yaw)) * cos(glm::radians(orient->pitch)),
+		sin(glm::radians(orient->pitch)),
+		sin(glm::radians(orient->yaw)) * cos(glm::radians(orient->pitch))));
 
 	glm::mat4 viewMatrix = glm::lookAt(
-		CameraPos, //camera pos
-		CameraFront + CameraPos, //look at pos !!not look at vector!!
+		glm::vec3(pos->x, pos->y, pos->z), //camera pos
+		CameraFront + glm::vec3(pos->x, pos->y, pos->z), //look at pos !!not look at vector!!
 		glm::vec3(0.0f, 1.0f, 0.0f)  //Up Direction
 	);
 

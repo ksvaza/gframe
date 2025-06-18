@@ -5,7 +5,7 @@
 
 inline void UpdateMovement(ECS::ecs& _ecs, float dt)
 {
-    auto archetypes = _ecs.FindArchetypesWithMask<Position, Velocity>();
+    /*auto archetypes = _ecs.FindArchetypesWithMask<Position, Velocity>();
 
     for (ECS::Archetype* arch : archetypes)
     {
@@ -20,5 +20,5 @@ inline void UpdateMovement(ECS::ecs& _ecs, float dt)
             pos->y += vel->vy * dt;
             pos->z += vel->vz * dt;
         }
-    }
+    }*/
 }

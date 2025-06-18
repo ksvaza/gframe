@@ -123,6 +123,9 @@
     <ClCompile Include="MovementSystem.hpp">
       <Filter>Header Files\engine\ECS\Systems</Filter>
     </ClCompile>
+    <ClCompile Include="PlayerTag.hpp">
+      <Filter>Header Files\engine\ECS\Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="mesh.hpp">

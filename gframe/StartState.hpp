@@ -33,4 +33,6 @@ private:
 
 	float yaw;
 	float pitch;
+
+	EntityID entity;
 };
