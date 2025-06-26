@@ -71,7 +71,7 @@ void Renderer::Clear(glm::vec4 colour)
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
-/*int Renderer::EcsDrawMesh(TransformComponent transform, MeshComponent& mesh, Shader shader, Camera& camera)
+int Renderer::EcsDrawMesh(MeshComponent& mesh,const TransformComponent& transform,Shader shader,const Camera& camera) 
 {
 	if (!mesh.isUploaded)
 	{
@@ -82,14 +82,15 @@ void Renderer::Clear(glm::vec4 colour)
 		glBindVertexArray(mesh.VAO);
 
 		glBindBuffer(GL_ARRAY_BUFFER, mesh.VBO);
-		glBufferData(GL_ARRAY_BUFFER, mesh.vertexCount * sizeof(Vertex), mesh.vertices, GL_STATIC_DRAW);
+		glBufferData(GL_ARRAY_BUFFER, mesh.vertices.size() * sizeof(Vertex), mesh.vertices.data(), GL_STATIC_DRAW);
 
 		std::vector<unsigned int> indices;
-		for (int i = 0; i < mesh.faceCount; i++)
+		indices.reserve(mesh.faces.size() * 3);
+		for (const auto& face : mesh.faces)
 		{
-			indices.push_back(mesh.faces[i].index[0]);
-			indices.push_back(mesh.faces[i].index[1]);
-			indices.push_back(mesh.faces[i].index[2]);
+			indices.push_back(face.index[0]);
+			indices.push_back(face.index[1]);
+			indices.push_back(face.index[2]);
 		}
 
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh.EBO);
@@ -117,19 +118,17 @@ void Renderer::Clear(glm::vec4 colour)
 
 	shader.Use();
 
+	glm::mat4 model = transform.GetMatrix();
+	glm::mat4 view = camera.GetViewMatrix();
+	glm::mat4 projection = camera.GetProjectionMatrix();
 
-	unsigned int modelLoc = glGetUniformLocation(shader.GetID(), "model");
-	unsigned int viewLoc = glGetUniformLocation(shader.GetID(), "view");
-	unsigned int projLoc = glGetUniformLocation(shader.GetID(), "projection");
-
-	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(transform.GetMatrix()));
-	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(camera.GetViewMatrix()));
-	glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(camera.GetProjectionMatrix()));
-
+	glUniformMatrix4fv(glGetUniformLocation(shader.GetID(), "model"), 1, GL_FALSE, glm::value_ptr(model));
+	glUniformMatrix4fv(glGetUniformLocation(shader.GetID(), "view"), 1, GL_FALSE, glm::value_ptr(view));
+	glUniformMatrix4fv(glGetUniformLocation(shader.GetID(), "projection"), 1, GL_FALSE, glm::value_ptr(projection));
 
 	glBindVertexArray(mesh.VAO);
-	glDrawElements(GL_TRIANGLES, mesh.faceCount * 3, GL_UNSIGNED_INT, 0);
+	glDrawElements(GL_TRIANGLES, static_cast<GLsizei>(mesh.faces.size() * 3), GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
 
 	return 0;
-}*/
+}

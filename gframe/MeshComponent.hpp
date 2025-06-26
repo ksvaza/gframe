@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include <iostream>
 
 class MeshComponent
 {
@@ -18,6 +19,5 @@ public:
 
     glm::vec4 colour = glm::vec4(1.0f);
     bool isUploaded = false;
-
-
 };
+

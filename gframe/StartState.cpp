@@ -13,9 +13,11 @@
 #include "MeshComponent.hpp"
 #include"RenderSystem.hpp"
 
+
 void StartState::Init()
 {
-	entity = _data->ecs.CreateEntity();
+	player = _data->ecs.CreateEntity();
+	cube = _data->ecs.CreateEntity();
 	_data->ecs.RegisterComponent<Velocity>();
 	_data->ecs.RegisterComponent<InputTag>();
 	_data->ecs.RegisterComponent<PlayerTag>();
@@ -23,26 +25,28 @@ void StartState::Init()
 	_data->ecs.RegisterComponent<RenderTag>();
 	_data->ecs.RegisterComponent<MeshComponent>();
 
-	_data->ecs.AddComponent<Velocity>(entity, Velocity(0.0f, 0.0f, 0.0f ));
-	_data->ecs.AddComponent<InputTag>(entity, InputTag());
-	_data->ecs.AddComponent<PlayerTag>(entity, PlayerTag());
-	_data->ecs.AddComponent<TransformComponent>(entity, TransformComponent());
-	_data->ecs.AddComponent<RenderTag>(entity, RenderTag("testShader"));
-	
-	std::cout << "shader key: " << _data->ecs.GetComponentForEntity<RenderTag>(entity)->ShaderKey << '\n';
+	_data->ecs.AddComponent<Velocity>(player, Velocity(0.0f, 0.0f, 0.0f ));
+	_data->ecs.AddComponent<InputTag>(player, InputTag());
+	_data->ecs.AddComponent<PlayerTag>(player, PlayerTag());
+	_data->ecs.AddComponent<TransformComponent>(player, TransformComponent());
+	_data->ecs.AddComponent<RenderTag>(player, RenderTag("testShader"));
+
+	_data->ecs.AddComponent<TransformComponent>(cube, TransformComponent(glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f), glm::vec3(1.0f)));
+	_data->ecs.AddComponent<RenderTag>(cube, RenderTag("testShader"));
+
 
 	_data->ecs.RegisterSystem(MovementSystem);
 	_data->ecs.RegisterSystem(UpdateMovement);
 	_data->ecs.RegisterSystem(RenderSystem);
 	yaw = -90.0f;
 	pitch = 0;
-	CameraPos = glm::vec3(0.0f, 0.0f, 30.0f);
+	//CameraPos = glm::vec3(0.0f, 0.0f, 30.0f);
 
 	_data->AssetManager.LoadAllMeshesFromFolder("../StartState");
 
 
-	//_data->ecs.AddComponent<MeshComponent>(entity, MeshComponent(_data->AssetManager.GetMeshComponent("cube")));
-
+	//_data->ecs.AddComponent<MeshComponent>(player, MeshComponent(_data->AssetManager.GetMeshComponent("cube")));
+	_data->ecs.AddComponent<MeshComponent>(cube, MeshComponent(_data->AssetManager.GetMeshComponent("cube")));
 
 
 	Pixel3* pixels = _data->AssetManager.GetTexture("check").data.ch3;
@@ -88,7 +92,7 @@ void StartState::Init()
 
 void StartState::HandleInput()
 {
-	float sensitivity = 0.1f;
+	/*float sensitivity = 0.1f;
 	float speed = 1.0f;
 	if (Input.Button(0))
 	{
@@ -150,7 +154,7 @@ void StartState::HandleInput()
 	else if (Input.MouseScrollOffset().y < 0)
 	{
 		printf("Down\n");
-	}
+	}*/
 }
 
 void StartState::Update(float dt)
@@ -166,25 +170,11 @@ void StartState::Update(float dt)
 
 void StartState::Draw(float dt)
 {
-	TransformComponent* transform = _data->ecs.GetComponentForEntity<TransformComponent>(entity);
+	TransformComponent* transform = _data->ecs.GetComponentForEntity<TransformComponent>(player);
 
 	_data->camera.position = transform->position;
 	_data->camera.rotation = transform->rotation;
 
-	/*for (int i = 0; i < 4; i++)
-	{
-		std::cout << projectionMatrix[i][0] << ", " 
-			<< viewMatrix[i][1] << ", "
-			<< viewMatrix[i][2] << ", "
-			<< viewMatrix[i][3] << " | "
-			<< _data->camera.GetViewMatrix()[i][0] << ", "
-			<< _data->camera.GetViewMatrix()[i][1] << ", "
-			<< _data->camera.GetViewMatrix()[i][2] << ", "
-			<< _data->camera.GetViewMatrix()[i][3] << '\n';
-	}*/
-
-	Render.Clear(glm::vec4(0.8, 0.0, 0.0, 1.0));
-	Render.DrawMesh(testMesh2, testShader, _data->camera.GetViewMatrix(), _data->camera.GetProjectionMatrix());
 }
 
 void StartState::Pause()

@@ -23,5 +23,5 @@ public:
 	int DrawMesh(Mesh& mesh, Shader shader, glm::mat4 viewMatrix, glm::mat4 projectionMatrix);
 	void Clear(glm::vec4 colour);
 
-	int EcsDrawMesh(TransformComponent transform, MeshComponent& mesh, Shader shader, Camera& camera);//es pievienosu metoditi oki?
+	int EcsDrawMesh(MeshComponent& mesh, const TransformComponent& transform, Shader shader, const Camera& camera);//es pievienosu metoditi oki?
 };

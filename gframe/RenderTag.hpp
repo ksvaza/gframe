@@ -5,8 +5,14 @@ class RenderTag
 {
 public:
 	RenderTag() = default;
-	RenderTag(std::string shaderKey) : ShaderKey(shaderKey) {
-		std::cout << "hello " << ShaderKey << '\n';
+	RenderTag(const char* shaderKey)
+	{
+#ifdef _MSC_VER
+		strncpy_s(ShaderKey, 64, shaderKey, _TRUNCATE);
+#else
+		std::strncpy(dest, src, 63);
+		dest[63] = '\0';
+#endif
 	}
-	std::string ShaderKey;
+	char ShaderKey[64];
 };

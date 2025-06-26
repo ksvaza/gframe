@@ -186,6 +186,25 @@ Mesh& AssetManager::GetMesh(std::string name)
     }
     return ErrorMesh;
 }
+
+
+MeshComponent AssetManager::GetMeshComponent(std::string name)
+{
+    static Mesh ErrorMesh;
+    MeshComponent mesh;
+
+    auto it = _meshes.find(name);
+    if (it != _meshes.end())
+    {
+        CopyMeshToComponent(it->second, mesh);
+    }
+    else
+    {
+        CopyMeshToComponent(ErrorMesh, mesh);
+    }
+
+    return mesh;
+}
 /*MeshComponent& AssetManager::GetMeshComponent(std::string name)
 {
     static Mesh ErrorMesh; // Kaut kads error mesh
