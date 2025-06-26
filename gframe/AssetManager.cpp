@@ -8,7 +8,7 @@
 
 namespace fs = std::filesystem;
 
-int8_t  AssetManager::LoadTexture(std::string_view name, std::string_view FileName)
+int8_t  AssetManager::LoadTexture(std::string name, std::string FileName)
 {
 	int Width, Height, nrChannels;
 	Texture texture;
@@ -27,7 +27,7 @@ int8_t  AssetManager::LoadTexture(std::string_view name, std::string_view FileNa
 	_textures[name] = texture;
 	return 0;
 }
-Texture& AssetManager::GetTexture(std::string_view name)
+Texture& AssetManager::GetTexture(std::string name)
 {
 	static Texture ErrorTexture; // kaut kads error texture ka piem. pink and black error texture
 	auto it = _textures.find(name);
@@ -37,7 +37,7 @@ Texture& AssetManager::GetTexture(std::string_view name)
 	}
 	return ErrorTexture;
 }
-int8_t AssetManager::UnloadTexture(std::string_view name)
+int8_t AssetManager::UnloadTexture(std::string name)
 {
 	auto it = _textures.find(name);
 	if (it != _textures.end())
@@ -184,9 +184,41 @@ Mesh& AssetManager::GetMesh(std::string name)
     {
         return it->second;
     }
-    std::cout << "mesh: " << name << " does not exist!!\n";
     return ErrorMesh;
 }
+/*MeshComponent& AssetManager::GetMeshComponent(std::string name)
+{
+    static Mesh ErrorMesh; // Kaut kads error mesh
+    MeshComponent mesh;
+    auto it = _meshes.find(name);
+    if (it != _meshes.end())
+    {
+        mesh.colour = it->second.colour;
+        mesh.VAO = it->second.VAO;
+        mesh.VBO = it->second.VBO;
+        mesh.EBO = it->second.EBO;
+        mesh.isUploaded = it->second.uploaded;
+        mesh.vertices = it->second.vertices;
+        mesh.vertexCount = it->second.vertexCount;
+        mesh.faces = it->second.faces;
+        mesh.faceCount = it->second.faceCount;
+        mesh.textureReferences = it->second.textureReferences;
+        mesh.textureRefCount = it->second.textureRefCount;
+        return mesh;
+    }
+    mesh.colour = ErrorMesh.colour;
+    mesh.VAO = ErrorMesh.VAO;
+    mesh.VBO = ErrorMesh.VBO;
+    mesh.EBO = ErrorMesh.EBO;
+    mesh.isUploaded = ErrorMesh.uploaded;
+    mesh.vertices = ErrorMesh.vertices;
+    mesh.vertexCount = ErrorMesh.vertexCount;
+    mesh.faces = ErrorMesh.faces;
+    mesh.faceCount = ErrorMesh.faceCount;
+    mesh.textureReferences = ErrorMesh.textureReferences;
+    mesh.textureRefCount = ErrorMesh.textureRefCount;
+    return mesh;
+}*/
 int8_t AssetManager::UnloadMesh(std::string name)
 {
     auto it = _meshes.find(name);
@@ -253,13 +285,47 @@ void AssetManager::LoadAllMeshesFromFolder(std::string folderPath)
     }
 }
 
+int8_t AssetManager::LoadShader(std::string name, std::string vertexFile, std::string fragmentFile)
+{
+    Shader shader;
+    shader.Read(vertexFile.c_str(), GL_VERTEX_SHADER);
+    shader.Read(fragmentFile.c_str(), GL_FRAGMENT_SHADER);
+    shader.Compile();
+    _shaders[name] = shader;
+    return 0;
+}
+
+Shader& AssetManager::GetShader(std::string name)
+{
+    static Shader ErrorShader; // Kaut kads error shader
+    auto it = _shaders.find(name);
+    if (it != _shaders.end())
+	{
+		return it->second;
+	}
+    return ErrorShader;
+}
+
+int8_t AssetManager::UnloadShader(std::string name)
+{
+    auto it = _shaders.find(name);
+    if (it != _shaders.end())
+	{
+		it->second.Delete();
+		_shaders.erase(it);
+		return 0;
+	}
+    return -1;
+    return 0;
+}
 
 
 
 
 
 
-int8_t AssetManager::LoadFont(std::string_view name, std::string_view FileName)
+
+int8_t AssetManager::LoadFont(std::string name, std::string FileName)
 {
 	return 0;
 }

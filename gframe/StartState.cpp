@@ -9,7 +9,9 @@
 #include "MovementSystem.hpp"
 #include "Movement.hpp"
 #include "TransformComponent.hpp"
-
+#include "RenderTag.hpp"
+#include "MeshComponent.hpp"
+#include"RenderSystem.hpp"
 
 void StartState::Init()
 {
@@ -18,20 +20,31 @@ void StartState::Init()
 	_data->ecs.RegisterComponent<InputTag>();
 	_data->ecs.RegisterComponent<PlayerTag>();
 	_data->ecs.RegisterComponent<TransformComponent>();
+	_data->ecs.RegisterComponent<RenderTag>();
+	_data->ecs.RegisterComponent<MeshComponent>();
 
 	_data->ecs.AddComponent<Velocity>(entity, Velocity(0.0f, 0.0f, 0.0f ));
 	_data->ecs.AddComponent<InputTag>(entity, InputTag());
 	_data->ecs.AddComponent<PlayerTag>(entity, PlayerTag());
 	_data->ecs.AddComponent<TransformComponent>(entity, TransformComponent());
+	_data->ecs.AddComponent<RenderTag>(entity, RenderTag("testShader"));
+	
+	std::cout << "shader key: " << _data->ecs.GetComponentForEntity<RenderTag>(entity)->ShaderKey << '\n';
 
 	_data->ecs.RegisterSystem(MovementSystem);
 	_data->ecs.RegisterSystem(UpdateMovement);
-
+	_data->ecs.RegisterSystem(RenderSystem);
 	yaw = -90.0f;
 	pitch = 0;
 	CameraPos = glm::vec3(0.0f, 0.0f, 30.0f);
 
 	_data->AssetManager.LoadAllMeshesFromFolder("../StartState");
+
+
+	//_data->ecs.AddComponent<MeshComponent>(entity, MeshComponent(_data->AssetManager.GetMeshComponent("cube")));
+
+
+
 	Pixel3* pixels = _data->AssetManager.GetTexture("check").data.ch3;
 
 	testMesh2 = _data->AssetManager.GetMesh("cube");
@@ -62,6 +75,9 @@ void StartState::Init()
 
 	std::cout << testMesh2;
 	testMesh2.transform.scale = glm::vec3(1.0f);
+
+	_data->AssetManager.LoadShader("testShader", "vertex.glsl", "fragment.glsl");
+	std::cout << "shader ID: " << _data->AssetManager.GetShader("testShader").GetID() << '\n';
 
 	testShader.Read("vertex.glsl", GL_VERTEX_SHADER);    
 	testShader.Read("fragment.glsl", GL_FRAGMENT_SHADER);

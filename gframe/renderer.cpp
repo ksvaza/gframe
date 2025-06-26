@@ -1,5 +1,6 @@
 #include "renderer.hpp"
 #include <glm/gtc/type_ptr.hpp>
+#include <vector>
 
 Renderer::DrawData Renderer::orderData(Mesh& mesh)
 {
@@ -28,72 +29,6 @@ void Renderer::cleanupData(DrawData data)
 	if (data.indices) { free(data.indices); }
 }
 
-
-// pirms to sito atkomente un izdzes manu implementacije
-// 1) tev tad vajag ari mesh izdzest mainigos dazus un UploadToGpu funkciju un ari Transform funckciju GetMatrix
-// 2) es palasiju ka sis kods ir diezgan neefektivs un katru reizi sito setapot ir diezgan loti leni
-
-/*int Renderer::DrawMesh(Mesh& mesh, Shader shader)
-{
-	int ret_val = 0;
-
-	// Ready data for drawing
-	float* vertices = NULL;
-	unsigned int* indices = NULL;
-	DrawData data = orderData(mesh);
-	if (!data.vertices)
-	{
-		printf("No vertices to draw!\n");
-		ret_val = 1; goto close;
-	}
-	vertices = data.vertices;
-	if (!data.indices)
-	{
-		printf("No indices to draw!\n");
-		ret_val = 1; goto close;
-	}
-	indices = data.indices;
-
-	if (!shader.GetID())
-	{
-		printf("No shader to use!\n");
-		ret_val = 1; goto close;
-	}
-	shader.Use();
-
-	// Draw the mesh
-	GLuint VAO, VBO, EBO;
-
-	glGenVertexArrays(1, &VAO);
-	glGenBuffers(1, &VBO);
-	glGenBuffers(1, &EBO);
-
-	glBindVertexArray(VAO);
-
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, mesh.vertexCount * sizeof(Vertex), vertices, GL_STATIC_DRAW);
-
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, mesh.faceCount * sizeof(GLuint) * 3, indices, GL_STATIC_DRAW);
-
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0); // Position
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(3 * sizeof(float))); // Colour
-	glEnableVertexAttribArray(1);
-
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-	glDrawElements(GL_TRIANGLES, mesh.faceCount * 3, GL_UNSIGNED_INT, 0);
-
-	glBindVertexArray(0);
-	glDeleteBuffers(1, &VBO);
-	glDeleteBuffers(1, &EBO);
-	glDeleteVertexArrays(1, &VAO);
-
-close:
-	cleanupData(data);
-	return ret_val;
-}*/
 
 int Renderer::DrawMesh(Mesh& mesh, Shader shader, glm::mat4 viewMatrix, glm::mat4 projectionMatrix)
 {
@@ -135,3 +70,66 @@ void Renderer::Clear(glm::vec4 colour)
 	glClearColor(colour.r, colour.g, colour.b, colour.a);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
+
+/*int Renderer::EcsDrawMesh(TransformComponent transform, MeshComponent& mesh, Shader shader, Camera& camera)
+{
+	if (!mesh.isUploaded)
+	{
+		glGenVertexArrays(1, &mesh.VAO);
+		glGenBuffers(1, &mesh.VBO);
+		glGenBuffers(1, &mesh.EBO);
+
+		glBindVertexArray(mesh.VAO);
+
+		glBindBuffer(GL_ARRAY_BUFFER, mesh.VBO);
+		glBufferData(GL_ARRAY_BUFFER, mesh.vertexCount * sizeof(Vertex), mesh.vertices, GL_STATIC_DRAW);
+
+		std::vector<unsigned int> indices;
+		for (int i = 0; i < mesh.faceCount; i++)
+		{
+			indices.push_back(mesh.faces[i].index[0]);
+			indices.push_back(mesh.faces[i].index[1]);
+			indices.push_back(mesh.faces[i].index[2]);
+		}
+
+		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, mesh.EBO);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), indices.data(), GL_STATIC_DRAW);
+
+		glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)0);
+		glEnableVertexAttribArray(0);
+
+		glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(3 * sizeof(float)));
+		glEnableVertexAttribArray(1);
+
+		glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)(7 * sizeof(float)));
+		glEnableVertexAttribArray(2);
+
+		glBindVertexArray(0);
+
+		mesh.isUploaded = true;
+	}
+
+	if (!shader.GetID())
+	{
+		printf("No shader to use!\n");
+		return 1;
+	}
+
+	shader.Use();
+
+
+	unsigned int modelLoc = glGetUniformLocation(shader.GetID(), "model");
+	unsigned int viewLoc = glGetUniformLocation(shader.GetID(), "view");
+	unsigned int projLoc = glGetUniformLocation(shader.GetID(), "projection");
+
+	glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(transform.GetMatrix()));
+	glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(camera.GetViewMatrix()));
+	glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(camera.GetProjectionMatrix()));
+
+
+	glBindVertexArray(mesh.VAO);
+	glDrawElements(GL_TRIANGLES, mesh.faceCount * 3, GL_UNSIGNED_INT, 0);
+	glBindVertexArray(0);
+
+	return 0;
+}*/

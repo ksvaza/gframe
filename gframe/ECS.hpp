@@ -65,12 +65,12 @@ namespace ECS
     inline void ecs::AddComponent(EntityID entity, T&& component)
     {
         using CleanT = std::decay_t<T>;
-        ComponentID id = factory.GetId<T>();
+        ComponentID id = factory.GetId<CleanT>();
 
         auto it = entityToArchetype.find(entity);
         mask NewMask;
-
         NewMask.set(id);
+
         std::unordered_map<ComponentID, void*> componentData;
         componentData[id] = new CleanT(std::forward<T>(component));
 
@@ -106,6 +106,7 @@ namespace ECS
         arch->RemoveEntity(entity);
         entityToArchetype[entity] = newArch;
     }
+
 
     template<typename T>
     inline void ecs::RemoveComponent(EntityID entity)

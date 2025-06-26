@@ -171,8 +171,11 @@
     <ClInclude Include="gframe.hpp" />
     <ClInclude Include="InputManager.hpp" />
     <ClInclude Include="mesh.hpp" />
+    <ClInclude Include="MeshComponent.hpp" />
     <ClInclude Include="Movement.hpp" />
     <ClInclude Include="renderer.hpp" />
+    <ClInclude Include="RenderSystem.hpp" />
+    <ClInclude Include="RenderTag.hpp" />
     <ClInclude Include="shader.hpp" />
     <ClInclude Include="StartState.hpp" />
     <ClInclude Include="State.hpp" />
