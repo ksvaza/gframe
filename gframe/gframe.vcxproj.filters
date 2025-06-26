@@ -176,6 +176,9 @@
     <ClInclude Include="Orientation.hpp">
       <Filter>Header Files\engine\ECS\Components</Filter>
     </ClInclude>
+    <ClInclude Include="GframeData.hpp">
+      <Filter>Header Files\engine\Other</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="fragment.glsl">

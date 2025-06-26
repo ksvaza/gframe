@@ -9,7 +9,7 @@ namespace ECS
     class ecs
     {
     public:
-        using SystemFn = std::function<void(ecs&, float)>;
+        using SystemFn = std::function<void(void*, float)>;
         EntityID CreateEntity();
         
         void RemoveEntity(EntityID entity);
@@ -39,10 +39,19 @@ namespace ECS
         
         void RegisterSystem(SystemFn fn);
         
-        void UpdateSystems(float dt);
+        void UpdateSystems(void* context, float dt);
         
         template<typename T>
         ComponentID GetComponentId();
+
+        void Test()
+        {
+            std::cout << "testing\n";
+            for (const auto& [archMask, archetype] : archetypes)
+            {
+                std::cout << "Archetype Mask: " << archMask << ", Entity Count: " << archetype->GetEntityCount() << '\n';
+            }
+        }
         
     private:
         EntityID NextId = 0;
@@ -163,7 +172,6 @@ namespace ECS
         mask m;
         (m.set(factory.GetId<T>()), ...);
         std::vector<Archetype*> result;
-
         for (const auto& [archMask, archetype] : archetypes) 
         {
             if ((archMask & m) == m) 

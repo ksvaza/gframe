@@ -6,10 +6,13 @@
 #include <glm/trigonometric.hpp>
 #include "InputManager.hpp"
 #include "PlayerTag.hpp"
+#include "GframeData.hpp"
 
-inline void MovementSystem(ECS::ecs& ecs, float dt) {
-
-   /* auto archetypes = ecs.FindArchetypesWithMask<InputTag, Orientation, Velocity>();
+inline void MovementSystem(void* context, float dt) 
+{
+    auto* data = static_cast<GframeData*>(context);
+    auto& ecs = data->ecs;
+    auto archetypes = ecs.FindArchetypesWithMask<InputTag, Orientation, Velocity>();
 
     for (ECS::Archetype* arch : archetypes)
     {
@@ -70,5 +73,5 @@ inline void MovementSystem(ECS::ecs& ecs, float dt) {
                 vel->vz = direction.z;
             }
         }
-    }*/
+    }
 }

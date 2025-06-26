@@ -30,6 +30,7 @@ void StartState::Init()
 
 	_data->ecs.RegisterSystem(MovementSystem);
 	_data->ecs.RegisterSystem(UpdateMovement);
+
 	/*_data->ecs.RegisterSystem([this](ECS::ecs& ecs, float dt) {
 		_data->window.height;
 
@@ -148,7 +149,7 @@ void StartState::HandleInput()
 
 void StartState::Update(float dt)
 {
-	_data->ecs.UpdateSystems(dt);
+	_data->ecs.UpdateSystems(_data.get(), dt);
 	Velocity* vel = _data->ecs.GetComponentForEntity<Velocity>(entity);
 	//std::cout << "Velocity: " << vel->vx << ", " << vel->vy << ", " << vel->vz << " | ";
 	Position* pos = _data->ecs.GetComponentForEntity<Position>(entity);

@@ -164,6 +164,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Archetype.hpp" />
+    <ClInclude Include="GframeData.hpp" />
     <ClInclude Include="Orientation.hpp" />
     <ClInclude Include="ecs.hpp" />
     <ClInclude Include="gframe.hpp" />

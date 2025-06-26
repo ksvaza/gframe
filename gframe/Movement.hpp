@@ -2,10 +2,13 @@
 #include "ecs.hpp"
 #include "Velocity.hpp"
 #include "Position.hpp"
+#include "GframeData.hpp"
 
-inline void UpdateMovement(ECS::ecs& _ecs, float dt)
+inline void UpdateMovement(void* context, float dt)
 {
-    /*auto archetypes = _ecs.FindArchetypesWithMask<Position, Velocity>();
+    auto* data = static_cast<GframeData*>(context);
+    auto& _ecs = data->ecs;
+    auto archetypes = _ecs.FindArchetypesWithMask<Position, Velocity>();
 
     for (ECS::Archetype* arch : archetypes)
     {
@@ -20,5 +23,5 @@ inline void UpdateMovement(ECS::ecs& _ecs, float dt)
             pos->y += vel->vy * dt;
             pos->z += vel->vz * dt;
         }
-    }*/
+    }
 }
