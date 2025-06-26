@@ -5,6 +5,7 @@
 #include "Window.hpp"
 #include "renderer.hpp"
 #include "ecs.hpp"
+#include "Camera.hpp"
 
 
 struct GframeData
@@ -15,6 +16,7 @@ struct GframeData
 	InputManager Input;
 	AssetManager AssetManager;
 	ECS::ecs ecs;
+	Camera camera;
 };
 
 typedef std::shared_ptr<GframeData> GframeDataRef;

@@ -1,14 +1,13 @@
 #pragma once
 #include "ecs.hpp"
-#include "Velocity.hpp"
-#include "Position.hpp"
 #include "GframeData.hpp"
+#include "TransformComponent.hpp"
 
 inline void UpdateMovement(void* context, float dt)
 {
     auto* data = static_cast<GframeData*>(context);
     auto& _ecs = data->ecs;
-    auto archetypes = _ecs.FindArchetypesWithMask<Position, Velocity>();
+    auto archetypes = _ecs.FindArchetypesWithMask<TransformComponent, Velocity>();
 
     for (ECS::Archetype* arch : archetypes)
     {
@@ -16,12 +15,12 @@ inline void UpdateMovement(void* context, float dt)
 
         for (size_t i = 0; i < entityCount; i++)
         {
-            auto* pos = arch->GetComponent<Position>(i);
+            auto* transform = arch->GetComponent<TransformComponent>(i);
             auto* vel = arch->GetComponent<Velocity>(i);
 
-            pos->x += vel->vx * dt;
-            pos->y += vel->vy * dt;
-            pos->z += vel->vz * dt;
+            transform->position.x += vel->vx * dt;
+            transform->position.y += vel->vy * dt;
+            transform->position.z += vel->vz * dt;
         }
     }
 }

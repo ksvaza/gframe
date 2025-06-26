@@ -1,18 +1,18 @@
 #pragma once
 #include "ecs.hpp"
 #include "InputTag.hpp"
-#include "Orientation.hpp"
 #include "Velocity.hpp"
 #include <glm/trigonometric.hpp>
 #include "InputManager.hpp"
 #include "PlayerTag.hpp"
 #include "GframeData.hpp"
+#include "TransformComponent.hpp"
 
 inline void MovementSystem(void* context, float dt) 
 {
     auto* data = static_cast<GframeData*>(context);
     auto& ecs = data->ecs;
-    auto archetypes = ecs.FindArchetypesWithMask<InputTag, Orientation, Velocity>();
+    auto archetypes = ecs.FindArchetypesWithMask<InputTag, TransformComponent, Velocity>();
 
     for (ECS::Archetype* arch : archetypes)
     {
@@ -22,13 +22,13 @@ inline void MovementSystem(void* context, float dt)
 
             for (size_t i = 0; i < count; i++)
             {
-                auto* orient = arch->GetComponent<Orientation>(i);
+                auto* orient = arch->GetComponent<TransformComponent>(i);
                 auto* vel = arch->GetComponent<Velocity>(i);
 
                 if (InputManager::HWInputs::Mouse.MouseButton[0])
                 {
-                    orient->yaw += InputManager::HWInputs::Mouse.MouseDeltaPosition.x * 0.1;
-                    orient->pitch -= InputManager::HWInputs::Mouse.MouseDeltaPosition.y * 0.1;
+                    orient->rotation.y += InputManager::HWInputs::Mouse.MouseDeltaPosition.x * 0.1;
+                    orient->rotation.x -= InputManager::HWInputs::Mouse.MouseDeltaPosition.y * 0.1;
                 }
 
                 float forwardInput = 0.0f;
@@ -53,8 +53,8 @@ inline void MovementSystem(void* context, float dt)
 
                 float speed = 25.0f;
 
-                float yaw = glm::radians(orient->yaw);
-                float pitch = glm::radians(orient->pitch);
+                float yaw = glm::radians(orient->rotation.y);
+                float pitch = glm::radians(orient->rotation.x);
 
                 glm::vec3 forward = glm::normalize(glm::vec3(
                     cos(yaw) * cos(pitch),
