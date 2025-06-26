@@ -4,38 +4,28 @@
 #include <math.h>
 #include "texture.hpp"
 #include <glm/gtc/matrix_transform.hpp>
-#include "Position.hpp"
 #include "Velocity.hpp"
-#include "Orientation.hpp"
 #include "InputTag.hpp"
 #include "MovementSystem.hpp"
 #include "Movement.hpp"
-
+#include "TransformComponent.hpp"
 
 
 void StartState::Init()
 {
 	entity = _data->ecs.CreateEntity();
-	_data->ecs.RegisterComponent<Position>();
 	_data->ecs.RegisterComponent<Velocity>();
-	_data->ecs.RegisterComponent<Orientation>();
 	_data->ecs.RegisterComponent<InputTag>();
 	_data->ecs.RegisterComponent<PlayerTag>();
+	_data->ecs.RegisterComponent<TransformComponent>();
 
-	_data->ecs.AddComponent<Position>(entity, Position{ 0.0f, 0.0f, 0.0f });
-	_data->ecs.AddComponent<Velocity>(entity, Velocity{ 0.0f, 0.0f, 0.0f });
-	_data->ecs.AddComponent<Orientation>(entity, Orientation{ 0.0f, 0.0f });
-	_data->ecs.AddComponent<InputTag>(entity, InputTag{});
-	_data->ecs.AddComponent<PlayerTag>(entity, PlayerTag{});
+	_data->ecs.AddComponent<Velocity>(entity, Velocity(0.0f, 0.0f, 0.0f ));
+	_data->ecs.AddComponent<InputTag>(entity, InputTag());
+	_data->ecs.AddComponent<PlayerTag>(entity, PlayerTag());
+	_data->ecs.AddComponent<TransformComponent>(entity, TransformComponent());
 
 	_data->ecs.RegisterSystem(MovementSystem);
 	_data->ecs.RegisterSystem(UpdateMovement);
-
-	/*_data->ecs.RegisterSystem([this](ECS::ecs& ecs, float dt) {
-		_data->window.height;
-
-
-		});*/
 
 	yaw = -90.0f;
 	pitch = 0;
@@ -161,40 +151,35 @@ void StartState::HandleInput()
 void StartState::Update(float dt)
 {
 	_data->ecs.UpdateSystems(_data.get(), dt);
-	Velocity* vel = _data->ecs.GetComponentForEntity<Velocity>(entity);
+	//Velocity* vel = _data->ecs.GetComponentForEntity<Velocity>(entity);
 	//std::cout << "Velocity: " << vel->vx << ", " << vel->vy << ", " << vel->vz << " | ";
-	Position* pos = _data->ecs.GetComponentForEntity<Position>(entity);
+	//Position* pos = _data->ecs.GetComponentForEntity<Position>(entity);
 	//std::cout << "Position: " << pos->x << ", " << pos->y << ", " << pos->z << " | ";
-	Orientation * orient = _data->ecs.GetComponentForEntity<Orientation>(entity);
+	//Orientation * orient = _data->ecs.GetComponentForEntity<Orientation>(entity);
 	//std::cout << "Orientation: " << orient->yaw << ", " << orient->pitch << std::endl;
 }
 
 void StartState::Draw(float dt)
 {
-	Position* pos = _data->ecs.GetComponentForEntity<Position>(entity);
-	Orientation* orient = _data->ecs.GetComponentForEntity<Orientation>(entity);
-	
-	CameraFront = glm::normalize(glm::vec3(cos(glm::radians(orient->yaw)) * cos(glm::radians(orient->pitch)),
-		sin(glm::radians(orient->pitch)),
-		sin(glm::radians(orient->yaw)) * cos(glm::radians(orient->pitch))));
+	TransformComponent* transform = _data->ecs.GetComponentForEntity<TransformComponent>(entity);
 
-	glm::mat4 viewMatrix = glm::lookAt(
-		glm::vec3(pos->x, pos->y, pos->z), //camera pos
-		CameraFront + glm::vec3(pos->x, pos->y, pos->z), //look at pos !!not look at vector!!
-		glm::vec3(0.0f, 1.0f, 0.0f)  //Up Direction
-	);
+	_data->camera.position = transform->position;
+	_data->camera.rotation = transform->rotation;
 
-	float aspectRatio = (float)_data->window.width / (float)_data->window.height;
-	glm::mat4 projectionMatrix = glm::perspective(
-		glm::radians(80.0f),
-		aspectRatio,
-		0.1f,  //tuvais grieziens
-		1000.0f //talais grieziens
-	);
-
+	/*for (int i = 0; i < 4; i++)
+	{
+		std::cout << projectionMatrix[i][0] << ", " 
+			<< viewMatrix[i][1] << ", "
+			<< viewMatrix[i][2] << ", "
+			<< viewMatrix[i][3] << " | "
+			<< _data->camera.GetViewMatrix()[i][0] << ", "
+			<< _data->camera.GetViewMatrix()[i][1] << ", "
+			<< _data->camera.GetViewMatrix()[i][2] << ", "
+			<< _data->camera.GetViewMatrix()[i][3] << '\n';
+	}*/
 
 	Render.Clear(glm::vec4(0.8, 0.0, 0.0, 1.0));
-	Render.DrawMesh(testMesh2, testShader, viewMatrix, projectionMatrix);
+	Render.DrawMesh(testMesh2, testShader, _data->camera.GetViewMatrix(), _data->camera.GetProjectionMatrix());
 }
 
 void StartState::Pause()

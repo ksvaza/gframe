@@ -14,6 +14,11 @@ Gframe::Gframe(int width, int height, std::string title)
 
 void Gframe::Run()
 {
+    _data->camera.aspectRatio = (float)_data->window.width / (float)_data->window.height;
+    _data->camera.fov = 80;
+    _data->camera.nearPlane = 0.1f;
+    _data->camera.farPlane = 1000.0f;
+
     glfwMakeContextCurrent(_data->window.glWindow);
     glfwSwapInterval(2);
 
@@ -67,6 +72,7 @@ void Gframe::Run()
         _data->Machine.GetActiveState()->Draw(interpolation);
 
         _data->Input.Update();
+        _data->camera.aspectRatio = (float)_data->window.width / (float)_data->window.height;
 
         glfwSwapBuffers(_data->window.glWindow);
         glfwPollEvents();

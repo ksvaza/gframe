@@ -126,6 +126,9 @@
     <ClCompile Include="PlayerTag.hpp">
       <Filter>Header Files\engine\ECS\Components</Filter>
     </ClCompile>
+    <ClCompile Include="Camera.cpp">
+      <Filter>Source Files\engine\Other</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="mesh.hpp">
@@ -167,16 +170,16 @@
     <ClInclude Include="ecs.hpp">
       <Filter>Header Files\engine\ECS</Filter>
     </ClInclude>
-    <ClInclude Include="Position.hpp">
-      <Filter>Header Files\engine\ECS\Components</Filter>
-    </ClInclude>
     <ClInclude Include="Movement.hpp">
       <Filter>Header Files\engine\ECS\Systems</Filter>
     </ClInclude>
-    <ClInclude Include="Orientation.hpp">
+    <ClInclude Include="GframeData.hpp">
+      <Filter>Header Files\engine\Other</Filter>
+    </ClInclude>
+    <ClInclude Include="TransformComponent.hpp">
       <Filter>Header Files\engine\ECS\Components</Filter>
     </ClInclude>
-    <ClInclude Include="GframeData.hpp">
+    <ClInclude Include="Camera.hpp">
       <Filter>Header Files\engine\Other</Filter>
     </ClInclude>
   </ItemGroup>

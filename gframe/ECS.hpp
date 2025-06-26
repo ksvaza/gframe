@@ -54,7 +54,7 @@ namespace ECS
         }
         
     private:
-        EntityID NextId = 0;
+        EntityID NextId = 1;
         ComponentFactory factory;
         std::unordered_map<mask, std::unique_ptr<Archetype>> archetypes;
         std::unordered_map<EntityID, Archetype*> entityToArchetype;
