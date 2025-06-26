@@ -10,24 +10,9 @@
 #include <memory>
 #include <string>
 #include "ecs.hpp"
+#include "GframeData.hpp"
 
-struct Player
-{
 
-};
-
-struct GframeData
-{
-	Window window;
-	Renderer Render;
-	StateMachine Machine;
-	InputManager Input;
-	AssetManager AssetManager;
-	Tools tools;
-	ECS::ecs ecs;
-};
-
-typedef std::shared_ptr<GframeData> GframeDataRef;
 class Gframe
 {
 public:

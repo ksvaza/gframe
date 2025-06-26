@@ -70,10 +70,10 @@ void ECS::ecs::RegisterSystem(SystemFn fn)
     systems.push_back(std::move(fn));
 }
 
-void ECS::ecs::UpdateSystems(float dt)
+void ECS::ecs::UpdateSystems(void* context,float dt)
 {
     for (auto& sys : systems)
     {
-        sys(*this, dt);
+        sys(context, dt);
     }
 }
