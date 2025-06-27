@@ -10,40 +10,154 @@ namespace ECS
     {
     public:
         using SystemFn = std::function<void(void*, float)>;
+
+        /// <summary>
+        /// Returns new EntityId
+        /// </summary>
+        /// <returns></returns>
         EntityID CreateEntity();
         
+        /// <summary>
+        /// Removes entityId from archetypes
+        /// </summary>
+        /// <param name="entity"></param>
         void RemoveEntity(EntityID entity);
         
+        /*template<typename T>
+        void AddComponent(EntityID entity, T&& component);*/
+
+        /// <summary>
+        /// Add a component to entityId
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="entity"></param>
         template<typename T>
-        void AddComponent(EntityID entity, T&& component);
+        void AddComponent(EntityID entity);
+
+        /// <summary>
+        /// Add a component with initial Data to EntityId
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="entity"></param>
+        /// <param name="component"></param>
+        template<typename T>
+        void AddComponentData(EntityID entity, T component);
         
+        /// <summary>
+        /// Remove a component from entityId
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="entity"></param>
         template<typename T>
         void RemoveComponent(EntityID entity);
 
+        /// <summary>
+        /// Register Component
+        /// If component is not registered it cant be used
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
         template<typename T>
         ComponentID RegisterComponent();
         
+        /// <summary>
+        /// returns unordered_map of all components for entity
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <returns></returns>
         std::unordered_map<ComponentID, void*> GetAllComponentsForEntity(EntityID entity);
 
+        /// <summary>
+        /// Returns a pointer to the component of type T for the given entity.
+        /// Use only if certain that entity has Component T
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="entity"></param>
+        /// <returns></returns>
         template<typename T>
         T* GetComponentForEntity(EntityID entity);
 
+        /// <summary>
+        /// Returns a pointer to the component of id ComponentID for the given entity.
+        /// Use only if certain that entity has Component with id
+        /// </summary>
+        /// <param name="entity"></param>
+        /// <param name="id"></param>
+        /// <returns></returns>
         void* GetComponentForEntity(EntityID entity, ComponentID id);
 
+        /// <summary>
+        /// Returns pointer to Archetype with mask exactly maching mask m
+        /// </summary>
+        /// <param name="m"></param>
+        /// <returns></returns>
         Archetype* FindArchetypeWithExactMask(const mask& m) const;
         
+        /// <summary>
+        /// Returns vector of pointers to Archetypes with masks that have at least comopnentns of mask m
+        /// </summary>
+        /// <param name="m"></param>
+        /// <returns></returns>
         std::vector<Archetype*> FindArchetypesWithMask(const mask& m) const;
         
+        /// <summary>
+        /// Returns vector of pointers to Archetypes with masks that have at least components T...
+        /// </summary>
+        /// <typeparam name="...T"></typeparam>
+        /// <returns></returns>
         template<typename... T>
         std::vector<Archetype*> FindArchetypesWithMask() const;
         
-        void RegisterSystem(SystemFn fn);
+        /// <summary>
+        /// Registers System for Update cycle
+        /// </summary>
+        /// <param name="fn"></param>
+        void RegisterUpdateSystem(SystemFn fn);
+
+        /// <summary>
+        /// Registers System for Input Cycle
+        /// </summary>
+        /// <param name="fn"></param>
+        void RegisterInputSystem(SystemFn fn);
+
+        /// <summary>
+        /// Registers System for Render Cycle
+        /// </summary>
+        /// <param name="fn"></param>
+        void RegisterRenderSystem(SystemFn fn);
         
+        /// <summary>
+        /// Updates Systems in Update Cycle
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="dt"></param>
         void UpdateSystems(void* context, float dt);
+
+        /// <summary>
+        /// Updates Systems in Input Cycle
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="dt"></param>
+        void UpdateInputSystems(void* context, float dt);
+
+        /// <summary>
+        /// Updates Systems in Render Cycle
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="dt"></param>
+        void UpdateRenderSystems(void* context, float dt);
         
+        /// <summary>
+        /// Get Id of Component T
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
         template<typename T>
         ComponentID GetComponentId();
 
+        /// <summary>
+        /// Outputs all archetypes and masks
+        /// </summary>
         void Test()
         {
             std::cout << "testing\n";
@@ -58,52 +172,164 @@ namespace ECS
         ComponentFactory factory;
         std::unordered_map<mask, std::unique_ptr<Archetype>> archetypes;
         std::unordered_map<EntityID, Archetype*> entityToArchetype;
-        std::vector<SystemFn> systems;
+        std::vector<SystemFn> updateSystems;
+        std::vector<SystemFn> inputSystems;
+        std::vector<SystemFn> renderSystems;
     };
-
-    template<typename T>
+    
+    /*template<typename T>
     inline void ecs::AddComponent(EntityID entity, T&& component)
     {
         using CleanT = std::decay_t<T>;
         ComponentID id = factory.GetId<CleanT>();
+        mask newMask;
 
         auto it = entityToArchetype.find(entity);
-        mask NewMask;
-        NewMask.set(id);
 
         std::unordered_map<ComponentID, void*> componentData;
         componentData[id] = new CleanT(std::forward<T>(component));
-
-        if (it == entityToArchetype.end())
-        {
-            auto newArch = std::make_unique<Archetype>(NewMask);
-            newArch->AddEntity(entity, componentData);
-            entityToArchetype[entity] = newArch.get();
-            archetypes[NewMask] = std::move(newArch);
-            return;
-        }
-
-        Archetype* arch = it->second;
-        componentData = arch->GetAllComponentsForEntity(entity);
-        componentData[id] = new CleanT(std::forward<T>(component));
-
-        mask newMask = arch->GetSignature();
         newMask.set(id);
 
-        auto it2 = archetypes.find(newMask);
-        if (it2 == archetypes.end())
-        {
+        if (it == entityToArchetype.end()) {
+            // New entity
             auto newArch = std::make_unique<Archetype>(newMask);
             newArch->AddEntity(entity, componentData);
-            arch->RemoveEntity(entity);
             entityToArchetype[entity] = newArch.get();
             archetypes[newMask] = std::move(newArch);
             return;
         }
 
-        Archetype* newArch = it2->second.get();
-        newArch->AddEntity(entity, componentData);
-        arch->RemoveEntity(entity);
+        // Existing entity — add to new archetype
+        Archetype* oldArch = it->second;
+
+        // SAFELY get component data before modifying maps
+        auto existingData = oldArch->GetAllComponentsForEntity(entity);
+        existingData[id] = new CleanT(std::forward<T>(component));
+
+        mask updatedMask = oldArch->GetSignature();
+        updatedMask.set(id);
+
+        auto found = archetypes.find(updatedMask);
+        Archetype* newArch = nullptr;
+
+        if (found == archetypes.end()) {
+            auto temp = std::make_unique<Archetype>(updatedMask);
+            newArch = temp.get();
+            archetypes[updatedMask] = std::move(temp);
+        }
+        else {
+            newArch = found->second.get();
+        }
+
+        newArch->AddEntity(entity, existingData);
+        oldArch->RemoveEntity(entity);
+        entityToArchetype[entity] = newArch;
+    }*/
+
+
+    template<typename T>
+    inline void ecs::AddComponent(EntityID entity)
+    {
+        ComponentID id = factory.GetId<T>();
+        mask newMask;
+
+        void* newComponentData = new T();
+        std::unordered_map<ComponentID, void*> componentData;
+        componentData[id] = newComponentData;
+        newMask.set(id);
+
+        auto it = entityToArchetype.find(entity);
+
+        if (it == entityToArchetype.end())
+        {
+            auto newArch = std::make_unique<Archetype>(newMask);
+            newArch->AddEntity(entity, componentData);
+            entityToArchetype[entity] = newArch.get();
+            archetypes[newMask] = std::move(newArch);
+            return;
+        }
+
+        Archetype* oldArch = it->second;
+        mask oldMask = oldArch->GetSignature();
+
+        if (oldMask.test(id)) {
+            std::cerr << "Component already exists for entity: " << entity << std::endl;
+            delete static_cast<T*>(newComponentData);
+            return;
+        }
+
+        std::unordered_map<ComponentID, void*> existingData = oldArch->GetAllComponentsForEntity(entity);
+        existingData[id] = newComponentData;
+
+        mask updatedMask = oldMask;
+        updatedMask.set(id);
+
+        Archetype* newArch = nullptr;
+        auto found = archetypes.find(updatedMask);
+        if (found == archetypes.end()) {
+            auto temp = std::make_unique<Archetype>(updatedMask);
+            newArch = temp.get();
+            archetypes[updatedMask] = std::move(temp);
+        }
+        else {
+            newArch = found->second.get();
+        }
+
+        newArch->AddEntity(entity, existingData);
+        oldArch->RemoveEntity(entity);
+        entityToArchetype[entity] = newArch;
+    }
+
+    template<typename T>
+    inline void ecs::AddComponentData(EntityID entity, T component)
+    {
+        ComponentID id = factory.GetId<T>();
+        mask newMask;
+
+        void* newComponentData = new T(component);
+        std::unordered_map<ComponentID, void*> componentData;
+        componentData[id] = newComponentData;
+        newMask.set(id);
+
+        auto it = entityToArchetype.find(entity);
+
+        if (it == entityToArchetype.end())
+        {
+            auto newArch = std::make_unique<Archetype>(newMask);
+            newArch->AddEntity(entity, componentData);
+            entityToArchetype[entity] = newArch.get();
+            archetypes[newMask] = std::move(newArch);
+            return;
+        }
+
+        Archetype* oldArch = it->second;
+        mask oldMask = oldArch->GetSignature();
+
+        if (oldMask.test(id)) {
+            std::cerr << "Component already exists for entity: " << entity << std::endl;
+            delete static_cast<T*>(newComponentData);
+            return;
+        }
+
+        std::unordered_map<ComponentID, void*> existingData = oldArch->GetAllComponentsForEntity(entity);
+        existingData[id] = newComponentData;
+
+        mask updatedMask = oldMask;
+        updatedMask.set(id);
+
+        Archetype* newArch = nullptr;
+        auto found = archetypes.find(updatedMask);
+        if (found == archetypes.end()) {
+            auto temp = std::make_unique<Archetype>(updatedMask);
+            newArch = temp.get();
+            archetypes[updatedMask] = std::move(temp);
+        }
+        else {
+            newArch = found->second.get();
+        }
+
+        newArch->AddEntity(entity, existingData);
+        oldArch->RemoveEntity(entity);
         entityToArchetype[entity] = newArch;
     }
 

@@ -1,4 +1,5 @@
 #include "Archetype.hpp"
+#include <iostream>
 
 ECS::Archetype::Archetype(const mask& signature)
 {
@@ -22,8 +23,16 @@ void ECS::Archetype::AddEntity(EntityID entity, const std::unordered_map<Compone
     {
         if (!signature.test(id)) continue;
 
+        if (componentData.find(id) == componentData.end()) {
+            std::cerr << "ERROR: componentData is missing component ID " << id << std::endl;
+            continue; // Or crash with a helpful error
+        }
+
+
         auto& array = componentArrays[id];
         size_t size = ComponentFactory::GetSize(id);
+
+
         const std::byte* src = reinterpret_cast<const std::byte*>(componentData.at(id));
 
         array.insert(array.end(), src, src + size);
@@ -114,22 +123,30 @@ void* ECS::Archetype::GetComponentForEntity(EntityID entity, ComponentID id)
 std::unordered_map<ComponentID, void*> ECS::Archetype::GetAllComponentsForEntity(EntityID entity)
 {
     std::unordered_map<ComponentID, void*> result;
-
     auto it = entityToIndex.find(entity);
+    
     if (it == entityToIndex.end()) 
         return result;
-
+    
     size_t index = it->second;
 
     for (ComponentID id = 0; id < MAX_COMPONENTS;id++)
     {
         if (!signature.test(id)) continue;
-
+        
         size_t size = ComponentFactory::GetSize(id);
         auto& array = componentArrays[id];
-        void* ptr = array.data() + index * size;
+        std::byte* base = array.data();
+        size_t offset = index * size;
+        if (offset + size <= array.size()) {
+            result[id] = static_cast<void*>(base + offset);
+        }
+        else {
+            std::cerr << "ERROR: Invalid access in GetAllComponentsForEntity for component ID " << id << std::endl;
+        }
 
-        result[id] = ptr;
+
+        //result[id] = ptr;
     }
 
     return result;

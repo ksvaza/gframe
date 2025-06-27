@@ -20,7 +20,7 @@ void Gframe::Run()
     _data->camera.farPlane = 1000.0f;
 
     glfwMakeContextCurrent(_data->window.glWindow);
-    glfwSwapInterval(2);
+    glfwSwapInterval(1);
 
     const float tps = 60.0f;
     const float dt = 1.0f / tps;
@@ -62,7 +62,7 @@ void Gframe::Run()
 
         while (accumulator >= dt)
         {
-           _data->Machine.GetActiveState()->HandleInput();
+           _data->Machine.GetActiveState()->HandleInput(dt);
            _data->Machine.GetActiveState()->Update(dt);
             accumulator -= dt;
         }

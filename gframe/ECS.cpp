@@ -65,14 +65,40 @@ std::vector<ECS::Archetype*> ECS::ecs::FindArchetypesWithMask(const mask& m) con
     return result;
 }
 
-void ECS::ecs::RegisterSystem(SystemFn fn)
+void ECS::ecs::RegisterUpdateSystem(SystemFn fn)
 {
-    systems.push_back(std::move(fn));
+    updateSystems.push_back(std::move(fn));
 }
 
-void ECS::ecs::UpdateSystems(void* context,float dt)
+void ECS::ecs::RegisterInputSystem(SystemFn fn)
 {
-    for (auto& sys : systems)
+    inputSystems.push_back(std::move(fn));
+}
+
+void ECS::ecs::RegisterRenderSystem(SystemFn fn)
+{
+    renderSystems.push_back(std::move(fn));
+}
+
+void ECS::ecs::UpdateSystems(void* context, float dt)
+{
+    for (auto& sys : updateSystems)
+    {
+        sys(context, dt);
+    }
+}
+
+void ECS::ecs::UpdateInputSystems(void* context, float dt)
+{
+    for (auto& sys : inputSystems)
+    {
+        sys(context, dt);
+    }
+}
+
+void ECS::ecs::UpdateRenderSystems(void* context, float dt)
+{
+    for (auto& sys : renderSystems)
     {
         sys(context, dt);
     }

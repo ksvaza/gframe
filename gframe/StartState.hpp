@@ -12,7 +12,7 @@ public:
 	~StartState() {};
 
 	void Init() override;
-	void HandleInput() override;
+	void HandleInput(float dt) override;
 	void Update(float dt) override;
 	void Draw(float dt) override;
 
@@ -34,4 +34,5 @@ private:
 
 	EntityID player;
 	EntityID cube;
+	EntityID house;
 };

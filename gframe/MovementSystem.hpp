@@ -27,9 +27,16 @@ inline void MovementSystem(void* context, float dt)
 
                 if (InputManager::HWInputs::Mouse.MouseButton[0])
                 {
-                    orient->rotation.y += InputManager::HWInputs::Mouse.MouseDeltaPosition.x * 0.1;
-                    orient->rotation.x -= InputManager::HWInputs::Mouse.MouseDeltaPosition.y * 0.1;
+                    orient->rotation.y += InputManager::HWInputs::Mouse.MouseDeltaPosition.x * 0.3;
+                    orient->rotation.x -= InputManager::HWInputs::Mouse.MouseDeltaPosition.y * 0.3;
+
+                    if (orient->rotation.x > 89.0f) orient->rotation.x = 89.0f;
+                    if (orient->rotation.x < -89.0f) orient->rotation.x = -89.0f;
+
+                    glfwSetInputMode(data->window.glWindow, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
                 }
+                else
+                    glfwSetInputMode(data->window.glWindow, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
 
                 float forwardInput = 0.0f;
                 float rightInput = 0.0f;
@@ -51,7 +58,7 @@ inline void MovementSystem(void* context, float dt)
 
 
 
-                float speed = 25.0f;
+                float speed = 35.0f;
 
                 float yaw = glm::radians(orient->rotation.y);
                 float pitch = glm::radians(orient->rotation.x);

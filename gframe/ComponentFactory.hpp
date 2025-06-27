@@ -7,18 +7,49 @@ namespace ECS {
 
     class ComponentFactory {
     public:
+
+        /// <summary>
+        /// Registers component
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
         template<typename T>
         static ComponentID RegisterComponent();
 
+        /// <summary>
+        /// Returns ComponentID of component T
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
         template<typename T>
         static ComponentID GetComponentID();
 
+        /// <summary>
+        /// Returns size in bytes of component with given ID
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         static size_t GetSize(ComponentID id);
 
+        /// <summary>
+        /// Returns Type Name of Component with ComponentID
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         static const std::string& GetTypeName(ComponentID id);
 
+        /// <summary>
+        /// Returns ID of component ith typename
+        /// </summary>
+        /// <param name="typeName"></param>
+        /// <returns></returns>
         static ComponentID GetId(const std::string& typeName);
 
+        /// <summary>
+        /// Returns ComponentID of type T
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
         template<typename T>
         static ComponentID GetId();
 
