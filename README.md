@@ -41,10 +41,14 @@ GameEngine
 │   │   ├── Entity Manager ✅
 │   │   ├── Component System ✅
 │   │   ├── Archetype Storage ✅
-│   │   └── System Scheduler ✅ (needs to be rewritten)
+│   │   └── System Scheduler ✅
 │   ├── Event System ❌
 │   ├── State Manager ✅ (needs to be optimized)
 │   └── Time Manager ❌ (Central place to track game time, dt)
+│   │    
+│   └── OOP 
+│       ├── Managers 🟡
+│       ├── GameObject Base Class ✅
 │
 ├── Input
 │   ├── Input Manager ✅
@@ -52,9 +56,9 @@ GameEngine
 ├── Rendering
 │   ├── Renderer Backend 🟡
 │   │   ├── Render Loop ✅
-│   │   ├── Shader System ❌
+│   │   ├── Shader System 🟡
 │   │   ├── Mesh System 🟡
-│   │   └── Material System ❌
+│   │   └── Material System 🟡
 │   ├── Camera System 🟡
 │   ├── Lighting System ❌
 │   └── UI System ❌
